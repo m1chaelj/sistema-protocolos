@@ -17,6 +17,9 @@ public class Alumno {
     private String apellidoMaterno;
     private String correoElectronico;
     private Integer idEstado;
+    private String contrasena;
+    private Integer idEstadoVerificacion;
+    private Integer boleta;
 
     @Override
     public boolean equals(Object o) {
