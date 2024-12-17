@@ -7,6 +7,7 @@ import mx.com.Escom_TT.Escom.external.rest.dto.*;
 import mx.com.Escom_TT.util.error.ErrorMapper;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -20,10 +21,6 @@ public class RegistroController {
 
     @Inject
     AlumnoService alumnoService;
-    @Inject
-    SecretarioService secretarioService;
-    @Inject
-    SinodalService sinodalService;
 
     @POST
     @Path("/estudiante")
@@ -31,12 +28,19 @@ public class RegistroController {
         return alumnoService.create(alumnopersistdto.toEntity()).map(AlumnoDto::fromEntity).map(Response::ok)
                 .getOrElseGet(ErrorMapper::errorCodeToResponseBuilder).build();
     }
+
+    @Inject
+    SinodalService sinodalService;
+
     @POST
     @Path("/sinodal")
     public Response create(@Valid SinodalPersistDto sinodalpersistdto){
         return sinodalService.create(sinodalpersistdto.toEntity()).map(SinodalDto::fromEntity).map(Response::ok)
                 .getOrElseGet(ErrorMapper::errorCodeToResponseBuilder).build();
     }
+
+    @Inject
+    SecretarioService secretarioService;
     @POST
     @Path("/secretario")
     public Response create(@Valid SecretarioPersistDto secretariopersistdto){
