@@ -4,11 +4,9 @@ public enum ErrorCodesEnum {
     /**
      * Codigos de error de reglas de negocio de sistema
      */
-    RNS001("Campo Obligatorio"),
-    RNS002("Longitud de campo"),
-    RNS004("Maquina de estados"),
-
-    RNN001("Unicidad de elementos"),
+    RNN001("Formato invalido para su identificador"),
+    RNN002("Formato invalido para correo"),
+    RNN004("Formato invalido de contraseña"),
     ERROR("Error inesperado"),
     /**
      * Errores NO asociados a una regla de negocio

@@ -5,4 +5,5 @@ import mx.com.Escom_TT.Escom.core.entity.Alumno;
 public interface AlumnoRepository {
 
     Alumno save(Alumno alumno);
+    boolean validarExisteBoletaAlumno(Integer boleta);
 }

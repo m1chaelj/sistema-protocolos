@@ -18,4 +18,9 @@ public class AlumnoDao implements AlumnoRepository {
    public Alumno save (Alumno alumno){
        return alumnoJpaRepository.saveAndFlush(AlumnoJpa.fromEntity(alumno)).toEntity();
    }
+
+    @Override
+    public boolean validarExisteBoletaAlumno(Integer boleta) {
+        return alumnoJpaRepository.existsById(boleta);
+    }
 }
