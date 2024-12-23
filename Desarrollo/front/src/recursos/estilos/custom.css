@@ -1,7 +1,6 @@
 /* Fondo general de la aplicación */
 .body-background {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../imagenes/fondo.png');
-  /*background-image: url('../imagenes/fondo.png');*/
   background-size: cover;
   background-position: center;
   min-height: 100vh;
@@ -10,46 +9,62 @@
   justify-content: center;
   align-items: center;
   margin: 0;
+  padding: 20px;
 }
 
 /* Estilo general de las tarjetas (formularios) */
 .card {
-  background: rgba(255, 255, 255, 0.9); /* Fondo semitransparente */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95); /* Fondo más opaco */
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
   width: 100%;
-  max-width: 400px;
+  max-width: 900px; /* Más amplio para columnas */
   animation: slideIn 0.6s ease-in-out;
+  margin: 10px;
 }
 
 /* Títulos dentro de las tarjetas */
 .card h1 {
-  font-size: 1.8rem;
+  font-size: 2rem;
   margin-bottom: 20px;
   text-align: center;
   color: #333;
 }
 
-/* Inputs dentro de las tarjetas */
-.card input {
+/* Estilos para formularios y campos */
+form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+form input,
+form select {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;
   width: 100%;
   margin-bottom: 15px;
+  transition: all 0.3s ease;
 }
 
-/* Botones dentro de las tarjetas */
+form input:focus,
+form select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Botones del formulario */
 .card button {
-  padding: 10px;
+  padding: 12px;
   background: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   font-size: 1rem;
-  width: 100%;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
 }
@@ -58,30 +73,43 @@
   background: #0056b3;
 }
 
-/* Enlaces de las tarjetas */
-.card a {
-  display: block;
-  color: #007bff;
-  text-decoration: none;
-  font-size: 0.9rem;
-  margin-top: 10px;
-  text-align: center;
+/* Contenedor para filas de formularios (Bootstrap-like grid) */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
-.card a:hover {
-  text-decoration: underline;
+.col-md-6 {
+  flex: 0 0 48%; /* Dos columnas de igual tamaño */
+  max-width: 48%;
+}
+
+/* Campos dinámicos */
+.dynamic-fields {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+/* Selector de cantidad */
+.form-control.select-small {
+  max-width: 150px;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+/* Botón de carga de archivos */
+input[type="file"] {
+  border: none;
 }
 
 /* Estilo del logo */
-.card img {
+.logo {
   margin-top: 20px;
   width: 150px;
   height: auto;
-}
-
-/* Contenedor animado para transiciones */
-.animated-container {
-  animation: fadeIn 0.5s ease-in-out;
 }
 
 /* Animaciones */
@@ -111,28 +139,75 @@
   animation: fadeIn 0.5s ease-in-out forwards;
 }
 
-.fade-out {
-  animation: fadeOut 0.5s ease-in-out forwards;
+/* Barra de menú */
+.barra-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: #3b5c77;
+  width: 250px;
+  transform: translateX(-250px);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.barra-menu.menu-abierto {
+  transform: translateX(0);
 }
 
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
+/* Icono de menú */
+.menu-icon {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+.menu-icon img {
+  width: 30px;
+  height: 30px;
+}
+
+/* Contenido del menú */
+.menu-contenido {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 60px;
+}
+
+.menu-contenido ul {
+  list-style: none;
+  padding: 0;
+}
+
+.menu-contenido li {
+  margin: 20px 0;
+  text-align: left;
+  padding-left: 20px;
+}
+
+.menu-contenido a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.1rem;
+  display: block;
+  transition: background-color 0.3s;
+}
+
+.menu-contenido a:hover {
+  background-color: #274258;
+}
+
+.cerrar-sesion a {
+  color: #ff4b5c;
+  font-weight: bold;
+}
+
+/* Fondo para la pantalla cuando el menú esté abierto */
+.menu-abierto + .body-background {
+  opacity: 0.9;
+  pointer-events: none; /* Evita interacción fuera del menú */
 }
