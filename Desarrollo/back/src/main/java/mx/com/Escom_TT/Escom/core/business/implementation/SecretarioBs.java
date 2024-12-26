@@ -4,6 +4,7 @@ import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
 import mx.com.Escom_TT.Escom.core.business.input.SecretarioService;
 import mx.com.Escom_TT.Escom.core.business.output.SecretarioRepository;
+import mx.com.Escom_TT.Escom.core.entity.Alumno;
 import mx.com.Escom_TT.Escom.core.entity.Secretario;
 import mx.com.Escom_TT.util.error.ErrorCodesEnum;
 
@@ -51,8 +52,39 @@ public class SecretarioBs implements SecretarioService {
 
     }
 
+
+    public Either<ErrorCodesEnum, Secretario> InicioSesion(Secretario entity) {
+        Either<ErrorCodesEnum, Secretario> result;
+
+        if (entity == null || entity.getBoleta() == null || entity.getContrasena() == null) {
+            return Either.left(ErrorCodesEnum.NOT_FOUND);
+        }
+
+        boolean credencialesValidas = verificarInicioSesion(entity.getBoleta(), entity.getContrasena());
+
+        if (credencialesValidas) {
+            Secretario secretario = secretarioRepository.findByBoleta(entity.getBoleta())
+                    .orElse(null);
+
+            if (secretario != null) {
+                result = Either.right(secretario);
+            } else {
+                result = Either.left(ErrorCodesEnum.RNN007);
+            }
+        } else {
+            result = Either.left(ErrorCodesEnum.RNN001);
+        }
+
+        return result;
+    }
+
+
     private boolean validarExisteBoletaSecretario(Integer boleta) {
         return secretarioRepository.validarExisteBoletaSecretario(boleta);
     }
 
+
+    private boolean verificarInicioSesion(Integer boleta, String contrasena) {
+        return secretarioRepository.verificarInicioSesion(boleta, contrasena);
+    }
 }

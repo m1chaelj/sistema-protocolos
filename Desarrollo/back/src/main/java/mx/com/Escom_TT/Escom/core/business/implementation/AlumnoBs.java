@@ -56,6 +56,35 @@ public class AlumnoBs implements AlumnoService {
         return result;
     }
 
+    public Either<ErrorCodesEnum, Alumno> InicioSesion(Alumno entity) {
+        Either<ErrorCodesEnum, Alumno> result;
+
+        if (entity == null || entity.getBoleta() == null || entity.getContrasena() == null) {
+            return Either.left(ErrorCodesEnum.NOT_FOUND);
+        }
+
+        boolean credencialesValidas = verificarInicioSesion(entity.getBoleta(), entity.getContrasena());
+
+        if (credencialesValidas) {
+            Alumno alumno = alumnoRepository.findByBoleta(entity.getBoleta())
+                    .orElse(null);
+
+            if (alumno != null) {
+                result = Either.right(alumno);
+            } else {
+                result = Either.left(ErrorCodesEnum.RNN007);
+            }
+        } else {
+            result = Either.left(ErrorCodesEnum.RNN001);
+        }
+
+        return result;
+    }
+
+
+    private boolean verificarInicioSesion(Integer boleta, String contrasena) {
+        return alumnoRepository.verificarInicioSesion(boleta, contrasena);
+    }
 
         private boolean validarExisteBoletaAlumno(Integer boleta) {
        return alumnoRepository.validarExisteBoletaAlumno(boleta);

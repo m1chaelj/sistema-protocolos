@@ -32,7 +32,7 @@ public class SinodalJpa{
     @Column(name = "correo_electronico")
     private String correoElectronico;
     @Column(name= "contrasena")
-    private String contraseña;
+    private String contrasena;
     @Column(name = "fk_id_estado")
     private Integer idEstado;
     @Column(name="fk_id_estado_verificacion")
@@ -48,7 +48,7 @@ public class SinodalJpa{
     public static SinodalJpa fromEntity(Sinodal sinodal) {
         return SinodalJpa.builder().idSinodal(sinodal.getIdSinodal()).boleta(sinodal.getBoleta())
                 .apellidoPaterno(sinodal.getApellidoPaterno()).apellidoMaterno(sinodal.getApellidoMaterno())
-                .contraseña(sinodal.getContrasena())
+                .contrasena(sinodal.getContrasena())
                 .correoElectronico(sinodal.getCorreoElectronico()).
                 nombre(sinodal.getNombre()).idEstado(sinodal.getIdEstado()).idEstadoVerificacion(sinodal.getIdEstadoVerificacion())
                 .academia(sinodal.getAcademia()).academia(sinodal.getAcademia()).build();
@@ -57,7 +57,7 @@ public class SinodalJpa{
     public Sinodal toEntity(){
         return Sinodal.builder().idSinodal(this.idSinodal)
                 .apellidoMaterno(this.apellidoMaterno)
-                .contrasena(this.contraseña)
+                .contrasena(this.contrasena)
                 .apellidoPaterno(this.apellidoPaterno)
                 .correoElectronico(this.correoElectronico)
                 .idEstado(this.idEstado).nombre(this.nombre)

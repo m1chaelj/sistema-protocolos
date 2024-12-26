@@ -57,7 +57,37 @@ public class SinodalBs implements SinodalService{
     }
 
 
+    public Either<ErrorCodesEnum, Sinodal> InicioSesion(Sinodal entity) {
+        Either<ErrorCodesEnum, Sinodal> result;
+
+        if (entity == null || entity.getBoleta() == null || entity.getContrasena() == null) {
+            return Either.left(ErrorCodesEnum.NOT_FOUND);
+        }
+
+        boolean credencialesValidas = verificarInicioSesion(entity.getBoleta(), entity.getContrasena());
+
+        if (credencialesValidas) {
+            Sinodal sinodal = sinodalRepository.findByBoleta(entity.getBoleta())
+                    .orElse(null);
+
+            if (sinodal != null) {
+                result = Either.right(sinodal);
+            } else {
+                result = Either.left(ErrorCodesEnum.RNN007);
+            }
+        } else {
+            result = Either.left(ErrorCodesEnum.RNN001);
+        }
+
+        return result;
+    }
+
+
     private boolean validarExisteBoletaSinodal(Integer boleta) {
         return sinodalRepository.validarExisteBoletaSinodal(boleta);
+    }
+
+    private boolean verificarInicioSesion(Integer boleta, String contrasena) {
+        return sinodalRepository.verificarInicioSesion(boleta, contrasena);
     }
 }

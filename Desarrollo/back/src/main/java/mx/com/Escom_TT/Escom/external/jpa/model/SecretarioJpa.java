@@ -31,7 +31,7 @@ public class SecretarioJpa {
     @Column(name = "correo_electronico")
     private String correoElectronico;
     @Column(name= "contrasena")
-    private String contraseña;
+    private String contrasena;
     @Column(name = "fk_id_estado")
     private Integer idEstado;
     @Column(name="fk_id_estado_verificacion")
@@ -45,7 +45,7 @@ public class SecretarioJpa {
     public static SecretarioJpa fromEntity(Secretario secretario){
         return SecretarioJpa.builder().idSecretario(secretario.getIdSecretario()).boleta(secretario.getBoleta())
                 .apellidoPaterno(secretario.getApellidoPaterno()).apellidoMaterno(secretario.getApellidoMaterno())
-                .contraseña(secretario.getContrasena())
+                .contrasena(secretario.getContrasena())
                 .correoElectronico(secretario.getCorreoElectronico()).
                 nombre(secretario.getNombre()).idEstado(secretario.getIdEstado()).idEstadoVerificacion(secretario.getIdEstadoVerificacion()).build();
     }
@@ -53,7 +53,7 @@ public class SecretarioJpa {
     public Secretario toEntity(){
         return Secretario.builder().idSecretario(this.idSecretario)
                 .apellidoMaterno(this.apellidoMaterno)
-                .contrasena(this.contraseña)
+                .contrasena(this.contrasena)
                 .apellidoPaterno(this.apellidoPaterno)
                 .correoElectronico(this.correoElectronico)
                 .idEstado(this.idEstado).nombre(this.nombre)

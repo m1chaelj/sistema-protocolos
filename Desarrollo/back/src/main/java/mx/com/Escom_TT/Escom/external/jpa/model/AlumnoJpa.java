@@ -29,7 +29,7 @@ public class AlumnoJpa {
     @Column(name = "correo_electronico")
     private String correoElectronico;
     @Column(name= "contrasena")
-    private String contraseña;
+    private String contrasena;
     @Column(name = "fk_id_estado")
     private Integer idEstado;
     @Column(name="fk_id_estado_verificacion")
@@ -42,7 +42,7 @@ public class AlumnoJpa {
     public static AlumnoJpa fromEntity(Alumno alumno){
         return AlumnoJpa.builder().idAlumno(alumno.getIdAlumno()).boleta(alumno.getBoleta())
                 .apellidoPaterno(alumno.getApellidoPaterno()).apellidoMaterno(alumno.getApellidoMaterno())
-                .contraseña(alumno.getContrasena())
+                .contrasena(alumno.getContrasena())
                 .correoElectronico(alumno.getCorreoElectronico()).
                 nombre(alumno.getNombre()).idEstado(alumno.getIdEstado()).idEstadoVerificacion(alumno.getIdEstadoVerificacion()).build();
     }
@@ -50,7 +50,7 @@ public class AlumnoJpa {
     public Alumno toEntity(){
         return Alumno.builder().idAlumno(this.idAlumno)
                 .apellidoMaterno(this.apellidoMaterno)
-                .contrasena(this.contraseña)
+                .contrasena(this.contrasena)
                 .apellidoPaterno(this.apellidoPaterno)
                 .correoElectronico(this.correoElectronico)
                 .idEstado(this.idEstado).nombre(this.nombre)

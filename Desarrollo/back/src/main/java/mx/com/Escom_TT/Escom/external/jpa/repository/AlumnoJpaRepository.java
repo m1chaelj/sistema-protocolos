@@ -4,5 +4,5 @@ import mx.com.Escom_TT.Escom.external.jpa.model.AlumnoJpa;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AlumnoJpaRepository extends JpaRepository<AlumnoJpa,Integer> {
-
+    boolean existsByBoletaAndContrasena(Integer boleta, String contrasena);
 }

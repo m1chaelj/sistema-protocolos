@@ -7,7 +7,6 @@ import mx.com.Escom_TT.Escom.external.rest.dto.*;
 import mx.com.Escom_TT.util.error.ErrorMapper;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
