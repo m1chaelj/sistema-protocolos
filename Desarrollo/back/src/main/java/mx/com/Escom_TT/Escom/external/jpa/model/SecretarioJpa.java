@@ -16,9 +16,9 @@ import javax.persistence.*;
 @Table(name = "secretario_catt")
 public class SecretarioJpa {
     @Id
-    @SequenceGenerator(name = "secretario_id_secretario_seq", sequenceName = "secretario_id_secretario_seq", allocationSize = 1)
-    @GeneratedValue(generator = "secretario_id_secretario_seq", strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_secretario")
+    @SequenceGenerator(name = "secretario_catt_id_secretario_catt_seq", sequenceName = "secretario_catt_id_secretario_catt_seq", allocationSize = 1)
+    @GeneratedValue(generator = "secretario_catt_id_secretario_catt_seq", strategy = GenerationType.SEQUENCE)
+    @Column(name = "id_secretario_catt")
     private Integer idSecretario;
     @Column(name = "boleta")
     private Integer boleta;
