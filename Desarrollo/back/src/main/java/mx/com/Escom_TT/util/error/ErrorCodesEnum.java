@@ -7,6 +7,7 @@ public enum ErrorCodesEnum {
     RNN001("Formato invalido para su identificador"),
     RNN002("Formato invalido para correo"),
     RNN004("Formato invalido de contraseña"),
+    RNN006("Formato invalido para acronimos"),
     ERROR("Error inesperado"),
     /**
      * Errores NO asociados a una regla de negocio

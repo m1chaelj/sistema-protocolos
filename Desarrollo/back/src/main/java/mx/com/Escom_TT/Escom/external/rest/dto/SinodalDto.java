@@ -29,6 +29,8 @@ public class SinodalDto {
     private Integer idEstadoVerificacion;
     @JsonProperty
     private Integer boleta;
+    @JsonProperty
+    private String academia;
 
 
     public static SinodalDto fromEntity(Sinodal sinodal) {
@@ -37,7 +39,7 @@ public class SinodalDto {
                 .contrasena(sinodal.getContrasena())
                 .correoElectronico(sinodal.getCorreoElectronico()).apellidoPaterno(sinodal.getApellidoPaterno())
                 .apellidoMaterno(sinodal.getApellidoMaterno()).idEstadoVerificacion(sinodal.getIdEstadoVerificacion()).idEstado(sinodal.getIdEstado())
-                .boleta(sinodal.getBoleta()).build();
+                .boleta(sinodal.getBoleta()).academia(sinodal.getAcademia()).build();
     }
 
 }

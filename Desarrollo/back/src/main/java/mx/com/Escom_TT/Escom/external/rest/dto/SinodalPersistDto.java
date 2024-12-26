@@ -16,12 +16,14 @@ public class SinodalPersistDto {
     private Integer boleta;
     @JsonProperty
     private String contrasena;
+    @JsonProperty
+    private String academia;
 
     public Sinodal toEntity() {
         return Sinodal.builder().boleta(boleta)
                 .nombre(nombre)
                 .contrasena(contrasena)
                 .correoElectronico(correoElectronico).apellidoPaterno(apellidoPaterno)
-                .apellidoMaterno(apellidoMaterno).build();
+                .apellidoMaterno(apellidoMaterno).academia(academia).build();
     }
 }

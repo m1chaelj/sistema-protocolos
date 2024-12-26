@@ -42,13 +42,20 @@ public class SinodalBs implements SinodalService{
             return Either.left(ErrorCodesEnum.RNN004);
         }
 
+        String academia = entity.getAcademia();
+        if (academia == null || (!academia.equals("ACC") && !academia.equals("ACS") && !academia.equals("IA"))) {
+            return Either.left(ErrorCodesEnum.RNN006);
+        }
+
         entity.setIdEstado(1);
         entity.setIdEstadoVerificacion(1);
+
         Sinodal sinodalpersist = sinodalRepository.save(entity);
         result = Either.right(sinodalpersist);
 
         return result;
     }
+
 
     private boolean validarExisteBoletaSinodal(Integer boleta) {
         return sinodalRepository.validarExisteBoletaSinodal(boleta);

@@ -37,7 +37,8 @@ public class SinodalJpa{
     private Integer idEstado;
     @Column(name="fk_id_estado_verificacion")
     private Integer idEstadoVerificacion;
-
+    @Column (name="academia")
+    private String academia;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "fk_id_estado", referencedColumnName = "id_estado", insertable = false, updatable = false)
@@ -49,7 +50,8 @@ public class SinodalJpa{
                 .apellidoPaterno(sinodal.getApellidoPaterno()).apellidoMaterno(sinodal.getApellidoMaterno())
                 .contraseña(sinodal.getContrasena())
                 .correoElectronico(sinodal.getCorreoElectronico()).
-                nombre(sinodal.getNombre()).idEstado(sinodal.getIdEstado()).idEstadoVerificacion(sinodal.getIdEstadoVerificacion()).build();
+                nombre(sinodal.getNombre()).idEstado(sinodal.getIdEstado()).idEstadoVerificacion(sinodal.getIdEstadoVerificacion())
+                .academia(sinodal.getAcademia()).academia(sinodal.getAcademia()).build();
     }
 
     public Sinodal toEntity(){
@@ -59,6 +61,6 @@ public class SinodalJpa{
                 .apellidoPaterno(this.apellidoPaterno)
                 .correoElectronico(this.correoElectronico)
                 .idEstado(this.idEstado).nombre(this.nombre)
-                .idEstadoVerificacion(idEstadoVerificacion).boleta(boleta).build();
+                .idEstadoVerificacion(idEstadoVerificacion).boleta(boleta).academia(academia).build();
     }
 }

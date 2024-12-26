@@ -19,7 +19,7 @@ public class Sinodal {
     private String contrasena;
     private Integer idEstadoVerificacion;
     private Integer boleta;
-
+    private String academia;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
