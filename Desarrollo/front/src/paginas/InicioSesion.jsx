@@ -14,7 +14,7 @@ function InicioSesion() {
     try {
       const response = await api.post('/login', { boleta, password }); // Llamada a la API
       if (response.data.success) {
-        const tipoUsuario = response.data.tipoUsuario; // "Alumno", "Sinodal", "Director"
+        const tipoUsuario = response.data.tipoUsuario; // Obtiene el tipo de usuario, E"Alumno", "Sinodal", "Director"
         switch (tipoUsuario) {
           case 'Alumno':
             navigate('/registro-protocolo');

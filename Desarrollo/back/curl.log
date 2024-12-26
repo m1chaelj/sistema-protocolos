@@ -1,0 +1,17 @@
+== Info:   Trying 127.0.0.1:8083...
+== Info: Connected to localhost (127.0.0.1) port 8083 (#0)
+=> Send header, 150 bytes (0x96)
+0000: POST /ingreso/estudiante HTTP/1.1
+0023: Host: localhost:8083
+0039: User-Agent: curl/7.88.1
+0052: Accept: */*
+005f: Content-Type: application/json
+007f: Content-Length: 196
+0094: 
+=> Send data, 196 bytes (0xc4)
+0000: {.  "nombre": "Salvador",.  "apellidoPaterno": "Sandoval",.  "ap
+0040: ellidoMaterno": "Garibay",.  "correoElectronico": "ssandovalgari
+0080: bay@gmail.com",.  "boleta": 2022630151,.  "contrasena": "salvado
+00c0: r".}
+== Info: Recv failure: Conexión reinicializada por la máquina remota
+== Info: Closing connection 0
