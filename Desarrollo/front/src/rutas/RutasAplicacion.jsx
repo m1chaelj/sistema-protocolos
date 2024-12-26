@@ -15,7 +15,7 @@ const RutasAplicacion = () => {
       <Route path="/registro" element={<RegistroSelector />} /> {/* Selector de perfil */}
       <Route path="/registro/estudiante" element={<RegistroEstudiante />} /> {/* Formulario para estudiante */}
       <Route path="/registro/sinodal" element={<RegistroSinodal />} /> {/* Formulario para sinodal */}
-      <Route path="/registro/director" element={<RegistroDirector />} /> {/* Formulario para director */}
+      <Route path="/registro/secretario" element={<RegistroDirector />} /> {/* Formulario para director */}
       <Route path="/recuperar-contrasena" element={<RecuperarContrasena />} />
       <Route path="/registro-protocolo" element={<RegistroProtocolo />} />
     </Routes>

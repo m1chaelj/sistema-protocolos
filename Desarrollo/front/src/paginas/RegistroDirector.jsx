@@ -27,7 +27,7 @@ function RegistroDirector() {
     }
 
     try {
-      const response = await api.post('/registrarse/director', {
+      const response = await api.post('/registrarse/secretario', {
         nombre: datosFormulario.nombre,
         apellidoPaterno: datosFormulario.apellidoPaterno,
         apellidoMaterno: datosFormulario.apellidoMaterno,
@@ -51,7 +51,7 @@ function RegistroDirector() {
   return (
     <div className="body-background d-flex flex-column justify-content-center align-items-center">
       <div className="card p-4" style={{ maxWidth: '800px', width: '100%' }}>
-        <h1 className="text-center mb-4">Registro de Director</h1>
+        <h1 className="text-center mb-4">Registro de Secretario de la CATT</h1>
         <div className="row">
           <div className="col-md-6">
             <input

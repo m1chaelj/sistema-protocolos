@@ -14,8 +14,8 @@ function RegistroSelector() {
       case 'Sinodal':
         navigate('/registro/sinodal');
         break;
-      case 'Director':
-        navigate('/registro/director');
+      case 'Secretario':
+        navigate('/registro/secretario');
         break;
       default:
         alert('Por favor selecciona un perfil válido.');
@@ -33,7 +33,7 @@ function RegistroSelector() {
         >
           <option value="Estudiante">Estudiante</option>
           <option value="Sinodal">Sinodal</option>
-          <option value="Director">Director</option>
+          <option value="Secretario">Secretario</option>
         </select>
         <button
           type="button"

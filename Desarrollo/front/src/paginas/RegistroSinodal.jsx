@@ -114,14 +114,19 @@ function RegistroSinodal() {
               value={datosFormulario.confirmarPassword}
               onChange={manejarCambio}
             />
-            <input
-              type="text"
+            <select
               className="form-control mb-3"
-              placeholder="Academia"
               name="academia"
               value={datosFormulario.academia}
               onChange={manejarCambio}
-            />
+            >
+              <option value="" disabled>
+                Selecciona una academia
+              </option>
+              <option value="ACC">Academia de Ciencias de la Computación - ACC</option>
+              <option value="ACS">Academia de Ciencias Sociales - ACS</option>
+              <option value="IA">Academia de Inteligencia Artificial - IA</option>
+            </select>
             <button type="button" className="btn btn-primary w-100" onClick={manejarRegistro}>
               Aceptar
             </button>
