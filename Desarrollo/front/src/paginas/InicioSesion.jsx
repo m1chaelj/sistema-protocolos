@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/api'; // Importamos Axios configurado
+import api from '../api/api'; // Importa api como se muestra aquí
 import '../recursos/estilos/custom.css';
 import logo from '../recursos/imagenes/logoESCOM.png';
+
 
 function InicioSesion() {
   const [boleta, setBoleta] = useState('');
@@ -14,7 +15,7 @@ function InicioSesion() {
     try {
       const response = await api.post('/login', { boleta, password }); // Llamada a la API
       if (response.data.success) {
-        const tipoUsuario = response.data.tipoUsuario; // Obtiene el tipo de usuario, E"Alumno", "Sinodal", "Director"
+        const tipoUsuario = response.data.tipoUsuario; // "Alumno", "Sinodal", "Director"
         switch (tipoUsuario) {
           case 'Alumno':
             navigate('/registro-protocolo');
