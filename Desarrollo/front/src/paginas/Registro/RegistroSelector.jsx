@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../recursos/imagenes/logoESCOM.png';
+import logo from '../../recursos/imagenes/logoESCOM.png';
 
 function RegistroSelector() {
   const [perfil, setPerfil] = useState('Estudiante');

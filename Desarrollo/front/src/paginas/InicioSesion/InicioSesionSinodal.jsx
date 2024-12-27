@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/api'; // Importa api como se muestra aquí
-import '../recursos/estilos/custom.css';
-import logo from '../recursos/imagenes/logoESCOM.png';
+import api from '../../api/api';
+import '../../recursos/estilos/custom.css';
+import logo from '../../recursos/imagenes/logoESCOM.png';
 
-
-function InicioSesion() {
+function InicioSesionSinodal() {
   const [boleta, setBoleta] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -13,35 +12,25 @@ function InicioSesion() {
   const manejarInicioSesion = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/login', { boleta, password }); // Llamada a la API
-      if (response.data.success) {
-        const tipoUsuario = response.data.tipoUsuario; // "Alumno", "Sinodal", "Director"
-        switch (tipoUsuario) {
-          case 'Alumno':
-            navigate('/registro-protocolo');
-            break;
-          case 'Sinodal':
-            navigate('/correcciones');
-            break;
-          case 'Director':
-            navigate('/estado-protocolo');
-            break;
-          default:
-            alert('Tipo de usuario desconocido');
-        }
+      const response = await api.post('/sinodal', { boleta, password }); 
+      if (response.status === 200) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('rol', 'sinodal');
+        navigate('//pagina-principal-sinodal'); 
       } else {
-        alert('Credenciales incorrectas');
+        // Mostrar el mensaje de error de la API si existe, de lo contrario un mensaje genérico
+        alert(response.data.message || 'Credenciales incorrectas.'); 
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      alert('Error al iniciar sesión');
+      alert('Error al iniciar sesión. Por favor, intenta de nuevo más tarde.');
     }
   };
 
   return (
     <div className="body-background">
       <div className="card">
-        <h1>Inicio de Sesión</h1>
+        <h1>Inicio de Sesión - Sinodal</h1>
         <form onSubmit={manejarInicioSesion}>
           <input
             type="text"
@@ -62,8 +51,8 @@ function InicioSesion() {
           </button>
         </form>
         <div className="text-center mt-3">
-          <p>¿Olvidaste tu contraseña? <a href="/recuperar-contrasena">Recupérala aquí</a></p>
-          <p>¿No tienes una cuenta? <a href="/registro">Regístrate</a></p>
+          <p>¿Olvidaste tu contraseña? <a href="/recuperar-contrasena">Recupérala aquí</a></p> 
+          <p>¿No tienes una cuenta? <a href="/registro">Regístrate</a></p> 
         </div>
       </div>
       <img src={logo} alt="Logo ESCOM" className="mt-4" style={{ width: '150px' }} />
@@ -71,4 +60,4 @@ function InicioSesion() {
   );
 }
 
-export default InicioSesion;
+export default InicioSesionSinodal;

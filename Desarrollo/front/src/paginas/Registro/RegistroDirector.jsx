@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/api'; // Importa el cliente Axios
-import logo from '../recursos/imagenes/logoESCOM.png';
+import api from '../../api/api'; // Importa el cliente Axios
+import logo from '../../recursos/imagenes/logoESCOM.png';
 
 function RegistroDirector() {
   const [datosFormulario, setDatosFormulario] = useState({
@@ -38,7 +38,7 @@ function RegistroDirector() {
 
       if (response.status === 200 || response.status === 201) {
         alert('Registro exitoso');
-        navigate('/inicio-sesion');
+        navigate('/inicio');
       } else {
         alert('Hubo un problema al registrar. Intenta de nuevo.');
       }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/api'; // Importamos Axios configurado
-import '../recursos/estilos/custom.css';
-import logo from '../recursos/imagenes/logoESCOM.png';
+import api from '../../api/api'; // Importa el cliente Axios
+import '../../recursos/estilos/custom.css';
+import logo from '../../recursos/imagenes/logoESCOM.png';
 
 function Registro() {
   const [tipoPerfil, setTipoPerfil] = useState('Alumno');

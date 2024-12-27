@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../recursos/imagenes/logoESCOM.png';
+import logo from '../../recursos/imagenes/logoESCOM.png';
 
 function RecuperarContrasena() {
   return (

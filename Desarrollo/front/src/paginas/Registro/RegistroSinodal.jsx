@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/api'; // Importa el cliente Axios
-import logo from '../recursos/imagenes/logoESCOM.png';
+import api from '../../api/api'; // Importa el cliente Axios
+import logo from '../../recursos/imagenes/logoESCOM.png';
 
-function RegistroAlumno() {
+function RegistroSinodal() {
   const [datosFormulario, setDatosFormulario] = useState({
     nombre: '',
     apellidoPaterno: '',
@@ -12,6 +12,7 @@ function RegistroAlumno() {
     correo: '',
     password: '',
     confirmarPassword: '',
+    academia: '', // Campo específico para el sinodal
   });
   const navigate = useNavigate();
 
@@ -27,18 +28,19 @@ function RegistroAlumno() {
     }
 
     try {
-      const response = await api.post('/registrarse/estudiante', {
+      const response = await api.post('/registrarse/sinodal', {
         nombre: datosFormulario.nombre,
         apellidoPaterno: datosFormulario.apellidoPaterno,
         apellidoMaterno: datosFormulario.apellidoMaterno,
         boleta: datosFormulario.boleta,
         correoElectronico: datosFormulario.correo,
         contrasena: datosFormulario.password,
+        academia: datosFormulario.academia,
       });
 
       if (response.status === 200 || response.status === 201) {
         alert('Registro exitoso');
-        navigate('/inicio-sesion');
+        navigate('/inicio');
       } else {
         alert('Hubo un problema al registrar. Intenta de nuevo.');
       }
@@ -51,7 +53,7 @@ function RegistroAlumno() {
   return (
     <div className="body-background d-flex flex-column justify-content-center align-items-center">
       <div className="card p-4" style={{ maxWidth: '800px', width: '100%' }}>
-        <h1 className="text-center mb-4">Registro de Alumno</h1>
+        <h1 className="text-center mb-4">Registro de Sinodal</h1>
         <div className="row">
           <div className="col-md-6">
             <input
@@ -78,7 +80,7 @@ function RegistroAlumno() {
               value={datosFormulario.apellidoMaterno}
               onChange={manejarCambio}
             />
-          <input
+            <input
               type="text"
               className="form-control mb-3"
               placeholder="Número de boleta"
@@ -112,6 +114,19 @@ function RegistroAlumno() {
               value={datosFormulario.confirmarPassword}
               onChange={manejarCambio}
             />
+            <select
+              className="form-control mb-3"
+              name="academia"
+              value={datosFormulario.academia}
+              onChange={manejarCambio}
+            >
+              <option value="" disabled>
+                Selecciona una academia
+              </option>
+              <option value="ACC">Academia de Ciencias de la Computación - ACC</option>
+              <option value="ACS">Academia de Ciencias Sociales - ACS</option>
+              <option value="IA">Academia de Inteligencia Artificial - IA</option>
+            </select>
             <button type="button" className="btn btn-primary w-100" onClick={manejarRegistro}>
               Aceptar
             </button>
@@ -123,4 +138,4 @@ function RegistroAlumno() {
   );
 }
 
-export default RegistroAlumno;
+export default RegistroSinodal;
