@@ -12,13 +12,15 @@ function InicioSesionSinodal() {
   const manejarInicioSesion = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/sinodal', { boleta, password }); 
+      const response = await api.post('/inicio/sinodal', { 
+        boleta: boleta, 
+        contrasena: password 
+      });
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('rol', 'sinodal');
-        navigate('//pagina-principal-sinodal'); 
+        navigate('/pagina-principal-sinodal'); 
       } else {
-        // Mostrar el mensaje de error de la API si existe, de lo contrario un mensaje genérico
         alert(response.data.message || 'Credenciales incorrectas.'); 
       }
     } catch (error) {
@@ -36,6 +38,7 @@ function InicioSesionSinodal() {
             type="text"
             className="form-control mb-3"
             placeholder="Número de boleta"
+            name="boleta" 
             value={boleta}
             onChange={(e) => setBoleta(e.target.value)}
           />
@@ -43,6 +46,7 @@ function InicioSesionSinodal() {
             type="password"
             className="form-control mb-3"
             placeholder="Contraseña"
+            name="contrasena" 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

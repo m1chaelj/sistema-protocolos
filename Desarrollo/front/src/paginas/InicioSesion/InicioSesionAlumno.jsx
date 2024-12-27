@@ -5,15 +5,15 @@ import '../../recursos/estilos/custom.css';
 import logo from '../../recursos/imagenes/logoESCOM.png';
 
 function InicioSesionAlumno() {
-  const [correo, setCorreo] = useState('');
+  const [boleta, setBoleta] = useState(''); // Cambiar el estado a 'boleta'
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const manejarInicioSesion = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/alumno', { 
-        correoElectronico: correo, 
+      const response = await api.post('/inicio/estudiante', { 
+        boleta: boleta, // Enviar 'boleta' en la solicitud
         contrasena: password 
       });
       if (response.status === 200) {
@@ -21,7 +21,6 @@ function InicioSesionAlumno() {
         localStorage.setItem('rol', 'estudiante');
         navigate('/pagina-principal-estudiante'); 
       } else {
-        // Mostrar el mensaje de error de la API si existe, de lo contrario un mensaje genérico
         alert(response.data.message || 'Credenciales incorrectas.'); 
       }
     } catch (error) {
@@ -36,12 +35,12 @@ function InicioSesionAlumno() {
         <h1>Inicio de Sesión - Alumno</h1>
         <form onSubmit={manejarInicioSesion}> 
           <input
-            type="email"
+            type="text" // Cambiar el tipo de input a 'text'
             className="form-control mb-3"
-            placeholder="Correo electrónico"
-            name="correo"
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
+            placeholder="Número de boleta" // Actualizar el placeholder
+            name="boleta" // Actualizar el nombre del input
+            value={boleta}
+            onChange={(e) => setBoleta(e.target.value)}
           />
           <input
             type="password"

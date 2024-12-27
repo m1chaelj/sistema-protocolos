@@ -12,13 +12,13 @@ function InicioSesion() {
     setTipoUsuario(tipo);
     switch (tipo) {
       case 'Alumno':
-        navigate('/alumno');
+        navigate('/inicio/alumno');
         break;
       case 'Sinodal':
-        navigate('/sinodal');
+        navigate('/inicio/sinodal');
         break;
       case 'Secretario':
-        navigate('/secretario');
+        navigate('/inicio/secretario');
         break;
       default:
         break;

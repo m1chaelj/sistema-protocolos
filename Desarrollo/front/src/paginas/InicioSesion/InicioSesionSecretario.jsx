@@ -12,13 +12,15 @@ function InicioSesionSecretario() {
   const manejarInicioSesion = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/secretario', { boleta, password }); 
+      const response = await api.post('/inicio/secretario', { 
+        boleta: boleta, 
+        contrasena: password 
+      }); 
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('rol', 'secretario');
         navigate('/pagina-principal-secretario'); 
       } else {
-        // Mostrar el mensaje de error de la API si existe, de lo contrario un mensaje genérico
         alert(response.data.message || 'Credenciales incorrectas.'); 
       }
     } catch (error) {
@@ -36,6 +38,7 @@ function InicioSesionSecretario() {
             type="text"
             className="form-control mb-3"
             placeholder="Número de boleta"
+            name="boleta" 
             value={boleta}
             onChange={(e) => setBoleta(e.target.value)}
           />
@@ -43,6 +46,7 @@ function InicioSesionSecretario() {
             type="password"
             className="form-control mb-3"
             placeholder="Contraseña"
+            name="contrasena" 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -61,4 +65,3 @@ function InicioSesionSecretario() {
 }
 
 export default InicioSesionSecretario;
-

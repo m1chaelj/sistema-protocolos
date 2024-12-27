@@ -20,9 +20,9 @@ const RutasAplicacion = () => {
     <Routes>
       <Route path="/" element={<Navigate to="/inicio" />} /> {/* Redirección automática */}
       <Route path="/inicio" element={<InicioSesion />} />
-      <Route path="/alumno" element={<InicioSesionAlumno />} />
-      <Route path="/sinodal" element={<InicioSesionSinodal />} />
-      <Route path="/secretario" element={<InicioSesionSecretario />} />
+      <Route path="/inicio/alumno" element={<InicioSesionAlumno />} />
+      <Route path="/inicio/sinodal" element={<InicioSesionSinodal />} />
+      <Route path="/inicio/secretario" element={<InicioSesionSecretario />} />
       <Route path="/registro" element={<RegistroSelector />} />
       <Route path="/registro/estudiante" element={<RegistroEstudiante />} />
       <Route path="/registro/sinodal" element={<RegistroSinodal />} />
