@@ -73,7 +73,6 @@ function FormularioDosIntegrantes() {
               <option value={0}>Ninguno</option>
               <option value={1}>Uno</option>
               <option value={2}>Dos</option>
-              <option value={3}>Tres</option>
             </select>
           </div>
           {listaIntegrantes.map((integrante, index) => (
