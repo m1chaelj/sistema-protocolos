@@ -11,6 +11,7 @@ public enum ErrorCodesEnum {
     RNN001("Unicidad de elementos"),
     RNN005("Período valido"),
     RNN007("Protocolo no encontrado"),
+    RNN008("Integrantes no guardados"),
     ERROR("Error inesperado"),
     /**
      * Errores NO asociados a una regla de negocio
