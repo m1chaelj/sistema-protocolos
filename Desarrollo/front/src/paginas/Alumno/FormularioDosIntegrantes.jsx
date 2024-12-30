@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/api";
+import api from "../../api/api8081";
 import "../../recursos/estilos/custom.css";
 import advertenciaIcono from "../../recursos/imagenes/advertencia.png";
 import logo from "../../recursos/imagenes/logoESCOM.png";

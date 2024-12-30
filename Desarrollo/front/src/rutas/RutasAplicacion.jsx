@@ -33,7 +33,7 @@ const RutasAplicacion = () => {
 
       {/* Nuevas rutas para el alumno */}
       <Route path="/alumno/formulario-uno-datos" element={<FormularioUnoDatos />} />
-      <Route path="/alumno/formulario-uno-archivo" element={<FormularioUnoArchivo />} />
+      <Route path="alumno/formulario-uno-archivo" element={<FormularioUnoArchivo />} />
       <Route path="/alumno/formulario-dos-integrantes" element={<FormularioDosIntegrantes />} />
       <Route path="/alumno/estado-protocolo" element={<EstadoProtocolo />} />
     </Routes>

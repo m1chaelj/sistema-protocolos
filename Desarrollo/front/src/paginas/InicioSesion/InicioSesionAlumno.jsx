@@ -19,7 +19,7 @@ function InicioSesionAlumno() {
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token); 
         localStorage.setItem('rol', 'estudiante');
-        navigate('/pagina-registro-protocolo'); 
+        navigate('/alumno/formulario-uno-datos'); 
       } else {
         alert(response.data.message || 'Credenciales incorrectas.'); 
       }
