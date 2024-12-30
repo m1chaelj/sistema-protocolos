@@ -1,15 +1,18 @@
 package mx.com.Escom_TT.Escom.core.business.implementation;
 import io.vavr.control.Either;
+import io.vertx.redis.client.Command;
+import io.vertx.redis.client.Redis;
+import io.vertx.redis.client.Request;
 import lombok.extern.slf4j.Slf4j;
 import mx.com.Escom_TT.Escom.core.business.input.AlumnoService;
 import mx.com.Escom_TT.Escom.core.business.output.AlumnoRepository;
-
 import mx.com.Escom_TT.Escom.core.entity.Alumno;
 
+import mx.com.Escom_TT.Escom.core.entity.AlumnoSesion;
 import mx.com.Escom_TT.util.error.ErrorCodesEnum;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.UUID;
 
 @Slf4j
 @ApplicationScoped
@@ -18,7 +21,41 @@ public class AlumnoBs implements AlumnoService {
     @Inject
     AlumnoRepository alumnoRepository;
 
+    @Inject
+    Redis redisClient;
 
+    public Either<ErrorCodesEnum, AlumnoSesion> InicioSesion(Alumno entity) {
+        Either<ErrorCodesEnum, Alumno> result;
+
+        if (entity == null || entity.getBoleta() == null || entity.getContrasena() == null) {
+            return Either.left(ErrorCodesEnum.NOT_FOUND);
+        }
+
+        boolean credencialesValidas = verificarInicioSesion(entity.getBoleta(), entity.getContrasena());
+
+        if (credencialesValidas) {
+            Alumno alumno = alumnoRepository.findByBoleta(entity.getBoleta())
+                    .orElse(null);
+
+            if (alumno != null) {
+                String sessionToken = UUID.randomUUID().toString();
+                log.info("Token generado para la sesión: {}", sessionToken);
+                redisClient.send(Request.cmd(Command.SETEX)
+                                .arg(sessionToken)
+                                .arg(3600)
+                                .arg(entity.getContrasena()));
+
+
+                AlumnoSesion alumnoSesion = new AlumnoSesion(alumno, sessionToken);
+
+                return Either.right(alumnoSesion);
+            } else {
+                return Either.left(ErrorCodesEnum.RNN007);
+            }
+        } else {
+            return Either.left(ErrorCodesEnum.RNN001);
+        }
+    }
 
     public Either<ErrorCodesEnum, Alumno> create(Alumno entity) {
         Either<ErrorCodesEnum, Alumno> result;
@@ -56,30 +93,6 @@ public class AlumnoBs implements AlumnoService {
         return result;
     }
 
-    public Either<ErrorCodesEnum, Alumno> InicioSesion(Alumno entity) {
-        Either<ErrorCodesEnum, Alumno> result;
-
-        if (entity == null || entity.getBoleta() == null || entity.getContrasena() == null) {
-            return Either.left(ErrorCodesEnum.NOT_FOUND);
-        }
-
-        boolean credencialesValidas = verificarInicioSesion(entity.getBoleta(), entity.getContrasena());
-
-        if (credencialesValidas) {
-            Alumno alumno = alumnoRepository.findByBoleta(entity.getBoleta())
-                    .orElse(null);
-
-            if (alumno != null) {
-                result = Either.right(alumno);
-            } else {
-                result = Either.left(ErrorCodesEnum.RNN007);
-            }
-        } else {
-            result = Either.left(ErrorCodesEnum.RNN001);
-        }
-
-        return result;
-    }
 
 
     private boolean verificarInicioSesion(Integer boleta, String contrasena) {

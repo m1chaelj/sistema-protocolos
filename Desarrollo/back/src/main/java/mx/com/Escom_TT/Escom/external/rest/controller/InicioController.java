@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Inicio de usuarios")
-public class InicioController {
+public class    InicioController {
 
     @Inject
     AlumnoService alumnoService;

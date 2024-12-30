@@ -1,14 +1,19 @@
 package mx.com.Escom_TT.Escom.core.business.implementation;
 
 import io.vavr.control.Either;
+import io.vertx.redis.client.Command;
+import io.vertx.redis.client.Redis;
+import io.vertx.redis.client.Request;
 import lombok.extern.slf4j.Slf4j;
 import mx.com.Escom_TT.Escom.core.business.input.SinodalService;
 import mx.com.Escom_TT.Escom.core.business.output.SinodalRepository;
 import mx.com.Escom_TT.Escom.core.entity.Sinodal;
+import mx.com.Escom_TT.Escom.core.entity.SinodalSession;
 import mx.com.Escom_TT.util.error.ErrorCodesEnum;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.UUID;
 
 @Slf4j
 @ApplicationScoped
@@ -16,6 +21,8 @@ public class SinodalBs implements SinodalService{
 
     @Inject
     SinodalRepository sinodalRepository;
+    @Inject
+    Redis redisClient;
 
     public Either<ErrorCodesEnum, Sinodal> create(Sinodal entity) {
         Either<ErrorCodesEnum, Sinodal> result;
@@ -57,7 +64,7 @@ public class SinodalBs implements SinodalService{
     }
 
 
-    public Either<ErrorCodesEnum, Sinodal> InicioSesion(Sinodal entity) {
+    public Either<ErrorCodesEnum, SinodalSession> InicioSesion(Sinodal entity) {
         Either<ErrorCodesEnum, Sinodal> result;
 
         if (entity == null || entity.getBoleta() == null || entity.getContrasena() == null) {
@@ -71,15 +78,22 @@ public class SinodalBs implements SinodalService{
                     .orElse(null);
 
             if (sinodal != null) {
-                result = Either.right(sinodal);
+                String sessionToken = UUID.randomUUID().toString();
+                log.info("Token generado para la sesión: {}", sessionToken);
+                redisClient.send(Request.cmd(Command.SETEX)
+                        .arg(sessionToken)
+                        .arg(3600)
+                        .arg(entity.getContrasena()));
+                SinodalSession sinodalSession = new SinodalSession(sinodal, sessionToken);
+
+                return Either.right(sinodalSession);
+
             } else {
-                result = Either.left(ErrorCodesEnum.RNN007);
+                return Either.left(ErrorCodesEnum.RNN007);
             }
         } else {
-            result = Either.left(ErrorCodesEnum.RNN001);
+            return Either.left(ErrorCodesEnum.RNN001);
         }
-
-        return result;
     }
 
 
