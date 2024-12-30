@@ -1,15 +1,19 @@
 package mx.com.Escom_TT.Escom.core.business.implementation;
 
 import io.vavr.control.Either;
+import io.vertx.redis.client.Command;
+import io.vertx.redis.client.Redis;
+import io.vertx.redis.client.Request;
 import lombok.extern.slf4j.Slf4j;
 import mx.com.Escom_TT.Escom.core.business.input.SecretarioService;
 import mx.com.Escom_TT.Escom.core.business.output.SecretarioRepository;
-import mx.com.Escom_TT.Escom.core.entity.Alumno;
 import mx.com.Escom_TT.Escom.core.entity.Secretario;
+import mx.com.Escom_TT.Escom.core.entity.SecretarioSession;
 import mx.com.Escom_TT.util.error.ErrorCodesEnum;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.UUID;
 
 @Slf4j
 @ApplicationScoped
@@ -17,6 +21,9 @@ public class SecretarioBs implements SecretarioService {
 
     @Inject
     SecretarioRepository secretarioRepository;
+
+    @Inject
+    Redis redisClient;
 
     public Either<ErrorCodesEnum, Secretario> create(Secretario entity) {
         Either<ErrorCodesEnum, Secretario> result;
@@ -53,7 +60,7 @@ public class SecretarioBs implements SecretarioService {
     }
 
 
-    public Either<ErrorCodesEnum, Secretario> InicioSesion(Secretario entity) {
+    public Either<ErrorCodesEnum, SecretarioSession> InicioSesion(Secretario entity) {
         Either<ErrorCodesEnum, Secretario> result;
 
         if (entity == null || entity.getBoleta() == null || entity.getContrasena() == null) {
@@ -67,16 +74,23 @@ public class SecretarioBs implements SecretarioService {
                     .orElse(null);
 
             if (secretario != null) {
-                result = Either.right(secretario);
+                String sessionToken = UUID.randomUUID().toString();
+                log.info("Token generado para la sesión: {}", sessionToken);
+                redisClient.send(Request.cmd(Command.SETEX)
+                        .arg(sessionToken)
+                        .arg(3600)
+                        .arg(entity.getContrasena()));
+                SecretarioSession secretarioSession = new SecretarioSession(secretario, sessionToken);
+
+                return Either.right(secretarioSession);
             } else {
-                result = Either.left(ErrorCodesEnum.RNN007);
+                return Either.left(ErrorCodesEnum.RNN007);
             }
         } else {
-            result = Either.left(ErrorCodesEnum.RNN001);
+            return Either.left(ErrorCodesEnum.RNN001);
         }
-
-        return result;
     }
+
 
 
     private boolean validarExisteBoletaSecretario(Integer boleta) {
