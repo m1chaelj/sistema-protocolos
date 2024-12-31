@@ -45,7 +45,7 @@ function FormularioDosIntegrantes() {
     }
 
     try {
-      const response = await api.post("/protocolos/integrantes", {
+      const response = await api.post("/registro-protocolo/integrantes", {
         nombre: integrante.nombre,
         boleta: integrante.boleta,
       });
@@ -65,7 +65,7 @@ function FormularioDosIntegrantes() {
   // Manejar el caso de "ningún integrante"
   const manejarNingunIntegrante = async () => {
     try {
-      const response = await api.post("/protocolos/integrantes", { integrantes: null });
+      const response = await api.post("/registro-protocolo/integrantes", { integrantes: null });
 
       if (response.status === 200 || response.status === 201) {
         alert("Registro completado sin integrantes.");
