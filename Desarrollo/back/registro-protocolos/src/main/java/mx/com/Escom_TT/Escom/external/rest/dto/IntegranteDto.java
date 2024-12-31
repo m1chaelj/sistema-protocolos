@@ -28,7 +28,7 @@ public class IntegranteDto {
                 .idIntegrante(integrante.getIdIntegrante())
                 .idProtocolo(integrante.getIdProtocolo())
                 .nombre(integrante.getNombre())
-                .boleta(integrante.getIdAlumno())
+                .boleta(integrante.getBoleta())
                 .idAlumno(integrante.getIdAlumno())
                 .build();
     }
