@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceUnit;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,7 +41,8 @@ public class ProtocoloDao implements ProtocoloRepository {
         return busqueda.map(protocolo -> Protocolo.builder()
                 .primerDirector((String) protocolo[0])
                 .segundoDirector((String) protocolo[1])
-                .fechaEntrega(protocolo[2] != null ? ((Timestamp) protocolo[2]).toLocalDateTime() : null)
+                .fechaEntrega(protocolo[2] != null ?
+                        LocalDateTime.parse(((Timestamp) protocolo[2]).toLocalDateTime().withNano(0).toString()) : null)
                 .nombre((String) protocolo[3])
                 .nombrePrimerIntegrante((String) protocolo[4])
                 .nombreSegundoIntegrante((String) protocolo[5])
