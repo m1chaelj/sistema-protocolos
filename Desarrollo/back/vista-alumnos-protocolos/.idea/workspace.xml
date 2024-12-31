@@ -13,9 +13,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 8
-}</component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 8
+}]]></component>
   <component name="ProjectId" id="2qyfvbFznvjkxBD6QqwnehwzQK0" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -27,7 +27,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "feat/developer",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos",
+    "last_opened_file_path": "/home/salvador/escom/sistema-protocolos/Desarrollo/back/vista-alumnos-protocolos",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -53,7 +53,6 @@
       <option name="presentableId" value="Default" />
       <updated>1735639966347</updated>
       <workItem from="1735639967435" duration="359000" />
-      <workItem from="1735640934254" duration="13000" />
     </task>
     <servers />
   </component>
