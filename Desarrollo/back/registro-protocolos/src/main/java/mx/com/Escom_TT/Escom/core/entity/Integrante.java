@@ -15,4 +15,7 @@ public class Integrante {
     private String nombre;
     private Integer boleta;
     private Integer IdAlumno;
+    private String nombreSegundoIntegrante;
+    private Integer boletaSegundoIntegrante;
+
 }

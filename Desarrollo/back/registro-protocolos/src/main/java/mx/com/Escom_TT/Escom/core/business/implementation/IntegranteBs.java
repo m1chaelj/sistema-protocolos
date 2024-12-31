@@ -21,17 +21,23 @@ IntegranteRepository integranteRepository;
     public Either<ErrorCodesEnum, Integrante> create(Integrante entity) {
         Either<ErrorCodesEnum, Integrante> result;
 
-        if (entity.getNombre() == null || entity.getBoleta() == null) {
+        String boletaPattern = "\\d{10}";
+
+        if (entity.getNombre() == null || entity.getBoleta() == null || entity.getBoletaSegundoIntegrante() == null) {
             result = Either.left(ErrorCodesEnum.RNN008);
-        } else if (entity.getBoleta() < 0) {
-            result = Either.left(ErrorCodesEnum.RNS002);
-        } else {
+        }
+        else if (!entity.getBoleta().toString().matches(boletaPattern)
+                || !entity.getBoletaSegundoIntegrante().toString().matches(boletaPattern)) {
+            result = Either.left(ErrorCodesEnum.RNS001);
+        }
+        else {
             Integrante integrantePersist = integranteRepository.save(entity);
             result = Either.right(integrantePersist);
         }
 
         return result;
     }
+
 
 
 }

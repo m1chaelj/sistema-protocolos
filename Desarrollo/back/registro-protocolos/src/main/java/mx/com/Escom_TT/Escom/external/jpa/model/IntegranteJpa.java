@@ -15,8 +15,7 @@ import javax.persistence.*;
 @Table(name = "integrantes")
 public class IntegranteJpa {
     @Id
-    @SequenceGenerator(name = "integrantes_id_integrante_seq", sequenceName = "integrantes_id_integrantes_seq", allocationSize = 1)
-    @GeneratedValue(generator = "integrantes_id_integrantes_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_integrante")
     private Integer idIntegrante;
     @Column(name = "fk_id_protocolo")
@@ -27,6 +26,11 @@ public class IntegranteJpa {
     private Integer boleta;
     @Column(name = "fk_id_alumno")
     private Integer idAlumno;
+    @Column(name="nombre_segundo_integrante")
+    private String nombreSegundoIntegrante;
+    @Column(name="boleta_segundo_integrante")
+    private Integer boletaSegundoIntegrante;
+
 
 
     public static IntegranteJpa fromEntity(Integrante integrante) {
@@ -36,6 +40,8 @@ public class IntegranteJpa {
                 .nombre(integrante.getNombre())
                 .boleta(integrante.getBoleta())
                 .idAlumno(integrante.getIdAlumno())
+                .nombreSegundoIntegrante(integrante.getNombreSegundoIntegrante())
+                .boletaSegundoIntegrante(integrante.getBoletaSegundoIntegrante())
                 .build();
     }
 
@@ -46,6 +52,8 @@ public Integrante toEntity() {
                 .nombre(this.nombre)
                 .boleta(this.boleta)
                 .IdAlumno(this.idAlumno)
+                .nombreSegundoIntegrante(this.nombreSegundoIntegrante)
+                .boletaSegundoIntegrante(this.boletaSegundoIntegrante)
                 .build();
 }
 

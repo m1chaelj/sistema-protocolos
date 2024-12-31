@@ -21,6 +21,11 @@ public class IntegranteDto {
     private Integer boleta;
     @JsonProperty
     private Integer idAlumno;
+    @JsonProperty
+    private String nombreSegundoIntegrante;
+    @JsonProperty
+    private Integer boletaSegundoIntegrante;
+
 
 
     public static IntegranteDto fromEntity(Integrante integrante) {
@@ -30,6 +35,8 @@ public class IntegranteDto {
                 .nombre(integrante.getNombre())
                 .boleta(integrante.getBoleta())
                 .idAlumno(integrante.getIdAlumno())
+                .nombreSegundoIntegrante(integrante.getNombreSegundoIntegrante())
+                .boletaSegundoIntegrante(integrante.getBoletaSegundoIntegrante())
                 .build();
     }
 
