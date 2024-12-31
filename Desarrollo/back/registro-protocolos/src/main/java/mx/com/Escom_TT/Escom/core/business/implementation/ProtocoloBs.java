@@ -13,7 +13,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @ApplicationScoped
@@ -43,6 +45,11 @@ public class ProtocoloBs implements ProtocoloService {
 
             return result;
         }
+
+    @Override
+    public List<Protocolo>findByNombreProtocolo(String nombre) {
+        return protocoloRepository.findByNombreProtocolo(nombre);
+    }
 
 
     private String generarIdentificador() {

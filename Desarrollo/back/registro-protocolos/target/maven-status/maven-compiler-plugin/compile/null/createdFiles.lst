@@ -16,6 +16,8 @@ mx/com/Escom_TT/util/error/ErrorType.class
 mx/com/Escom_TT/Escom/external/jpa/model/EstadoProtocoloJpa$EstadoProtocoloJpaBuilder.class
 mx/com/Escom_TT/util/statemachine/CustomStateMachine.class
 mx/com/Escom_TT/util/statemachine/StateMachine.class
+mx/com/Escom_TT/Escom/external/rest/dto/VistaProtocoloDto.class
+mx/com/Escom_TT/Escom/external/rest/dto/VistaProtocoloDto$VistaProtocoloDtoBuilder.class
 mx/com/Escom_TT/Escom/core/entity/Archivo.class
 mx/com/Escom_TT/util/StringConstants.class
 mx/com/Escom_TT/Escom/external/rest/dto/IntegrantePersistDto$IntegrantePersistDtoBuilder.class
@@ -31,6 +33,7 @@ mx/com/Escom_TT/Escom/external/rest/dto/ArchivoPersistDto$ArchivoPersistDtoBuild
 mx/com/Escom_TT/Escom/external/rest/controller/ArchivoController.class
 mx/com/Escom_TT/Escom/external/rest/dto/IntegranteDto.class
 mx/com/Escom_TT/Escom/external/jpa/dao/ArchivoDao.class
+mx/com/Escom_TT/Escom/external/rest/dto/VistaProtocoloPersistDto$VistaProtocoloPersistDtoBuilder.class
 mx/com/Escom_TT/Escom/external/rest/controller/ProtocoloController.class
 mx/com/Escom_TT/Escom/core/entity/Protocolo.class
 mx/com/Escom_TT/Escom/external/rest/dto/ArchivoDto.class
@@ -43,6 +46,7 @@ mx/com/Escom_TT/Escom/core/business/input/ProtocoloService.class
 mx/com/Escom_TT/util/enums/Numbers.class
 mx/com/Escom_TT/Escom/external/jpa/model/EstadoProtocoloJpa.class
 mx/com/Escom_TT/Escom/external/jpa/dao/ProtocoloDao.class
+mx/com/Escom_TT/Escom/external/rest/dto/VistaProtocoloPersistDto.class
 mx/com/Escom_TT/Escom/external/jpa/model/ArchivoJpa.class
 mx/com/Escom_TT/Escom/external/jpa/dao/IntegranteDao.class
 mx/com/Escom_TT/Escom/core/business/implementation/ArchivoBs.class

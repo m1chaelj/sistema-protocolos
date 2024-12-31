@@ -7,13 +7,13 @@ import mx.com.Escom_TT.Escom.external.jpa.repository.ArchivoJpaRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 @ApplicationScoped
 public class ArchivoDao implements ArchivoRepository {
 
     @Inject
     ArchivoJpaRepository archivoJpaRepository;
-
 
     @Override
     public Archivo save(Archivo archivo) {

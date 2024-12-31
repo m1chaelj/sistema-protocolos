@@ -16,6 +16,10 @@ public class Protocolo {
     private String segundoDirector;
     private LocalDateTime fechaEntrega;
     private String registro;
+    private String nombrePrimerIntegrante;
+    private String nombreSegundoIntegrante;
+    private String estadoProtocolo;
+
 
     @Override
     public boolean equals(Object o) {

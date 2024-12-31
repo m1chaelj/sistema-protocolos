@@ -9,6 +9,7 @@
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/jpa/model/ArchivoJpa.java
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/jpa/repository/IntegranteJpaRepository.java
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/jpa/dao/ProtocoloDao.java
+/home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/rest/dto/VistaProtocoloDto.java
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/Escom/core/business/input/ProtocoloService.java
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/util/error/ConstraintViolationExceptionMapper.java
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/util/DateUtils.java
@@ -19,6 +20,7 @@
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/jpa/model/ProtocoloJpa.java
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/util/error/ErrorCodeException.java
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/util/error/ErrorResponseDto.java
+/home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/rest/dto/VistaProtocoloPersistDto.java
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/Escom/core/entity/Protocolo.java
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/rest/dto/IntegrantePersistDto.java
 /home/salvador/escom/sistema-protocolos/Desarrollo/back/registro-protocolos/src/main/java/mx/com/Escom_TT/util/error/ErrorDetailDto.java
