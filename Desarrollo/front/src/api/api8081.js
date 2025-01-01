@@ -19,7 +19,35 @@ api8081.sendFormData = async (url, formData) => {
     console.error("Error al enviar FormData:", error);
     throw error;
   }
+}
+api8081.sendFormData = async (url, data) => {
+  const isFormData = data instanceof FormData;
+
+  try {
+    const headers = {
+      "Content-Type": isFormData ? "multipart/form-data" : "application/json"
+    };
+
+    const body = isFormData ? data : JSON.stringify(data);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: body
+    });
+
+    // Verifica la respuesta
+    if (response.ok) {
+      return await response.json(); // O usa .text() si no es JSON
+    } else {
+      throw new Error("Error en la solicitud");
+    }
+  } catch (error) {
+    console.error("Error al enviar datos:", error);
+    throw error;
+  }
 };
+
 
 // Función para realizar solicitudes GET
 api8081.getData = async (url, params = {}) => {
