@@ -2,28 +2,15 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api8081";
 import "../../recursos/estilos/custom.css";
-import { Modal, Button } from "react-bootstrap";
-import advertenciaIcono from "../../recursos/imagenes/advertencia.png";
 import logo from "../../recursos/imagenes/logoESCOM.png";
 
 function FormularioDosIntegrantes() {
   const [integrantes, setIntegrantes] = useState(0);
-  const [listaIntegrantes, setListaIntegrantes] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [listaIntegrantes, setListaIntegrantes] = useState([
+    { nombre: "", boleta: "" },
+    { nombre: "", boleta: "" },
+  ]); // Siempre dos integrantes para mapeo
   const navigate = useNavigate();
-
-  // Manejar cambio en el selector de cantidad de integrantes
-  const manejarCambioIntegrantes = (e) => {
-    const cantidad = parseInt(e.target.value, 10);
-    setIntegrantes(cantidad);
-
-    // Crear lista dinámica para los integrantes
-    const nuevaLista = Array.from({ length: cantidad }, () => ({
-      nombre: "",
-      boleta: "",
-    }));
-    setListaIntegrantes(nuevaLista);
-  };
 
   // Manejar cambio en los campos dinámicos
   const manejarCambioIntegrante = (indice, campo, valor) => {
@@ -34,15 +21,29 @@ function FormularioDosIntegrantes() {
     });
   };
 
-  // Enviar datos al backend
+  // Enviar datos al backend en el formato correcto
   const confirmarRegistro = async () => {
-    if (listaIntegrantes.some((i) => !i.nombre || !i.boleta)) {
-      alert("Por favor, completa todos los campos de los integrantes.");
+    const [integrante1, integrante2] = listaIntegrantes;
+
+    if (!integrante1.nombre || !integrante1.boleta) {
+      alert("Por favor, completa los datos del primer integrante.");
       return;
     }
 
+    if (integrantes === 2 && (!integrante2.nombre || !integrante2.boleta)) {
+      alert("Por favor, completa los datos del segundo integrante.");
+      return;
+    }
+
+    const payload = {
+      nombre: integrante1.nombre,
+      boleta: parseInt(integrante1.boleta, 10),
+      nombreSegundoIntegrante: integrantes === 2 ? integrante2.nombre : null,
+      boletaSegundoIntegrante: integrantes === 2 ? parseInt(integrante2.boleta, 10) : null,
+    };
+
     try {
-      const response = await api.post("/registro-protocolo/integrantes", listaIntegrantes);
+      const response = await api.post("/registro-protocolo/integrantes", payload);
 
       if (response.status === 200 || response.status === 201) {
         alert("Integrantes registrados correctamente.");
@@ -69,7 +70,7 @@ function FormularioDosIntegrantes() {
               className="form-control"
               id="integrantes"
               value={integrantes}
-              onChange={manejarCambioIntegrantes}
+              onChange={(e) => setIntegrantes(parseInt(e.target.value, 10))}
             >
               <option value={0}>Ninguno</option>
               <option value={1}>Uno</option>
@@ -78,39 +79,49 @@ function FormularioDosIntegrantes() {
           </div>
 
           {/* Campos dinámicos */}
-          {listaIntegrantes.map((integrante, index) => (
-            <div
-              key={index}
-              className="fade-in dynamic-fields"
-              style={{
-                animation: "fadeIn 0.5s ease-in-out",
-              }}
-            >
+          {integrantes > 0 && (
+            <div>
               <input
                 type="text"
                 className="form-control mb-3"
-                placeholder={`Nombre del integrante ${index + 1}`}
-                value={integrante.nombre}
-                onChange={(e) => manejarCambioIntegrante(index, "nombre", e.target.value)}
+                placeholder="Nombre del primer integrante"
+                value={listaIntegrantes[0].nombre}
+                onChange={(e) => manejarCambioIntegrante(0, "nombre", e.target.value)}
               />
               <input
                 type="text"
                 className="form-control mb-3"
-                placeholder={`Boleta del integrante ${index + 1}`}
-                value={integrante.boleta}
-                onChange={(e) => manejarCambioIntegrante(index, "boleta", e.target.value)}
+                placeholder="Boleta del primer integrante"
+                value={listaIntegrantes[0].boleta}
+                onChange={(e) => manejarCambioIntegrante(0, "boleta", e.target.value)}
               />
             </div>
-          ))}
+          )}
+
+          {integrantes === 2 && (
+            <div>
+              <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Nombre del segundo integrante"
+                value={listaIntegrantes[1].nombre}
+                onChange={(e) => manejarCambioIntegrante(1, "nombre", e.target.value)}
+              />
+              <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Boleta del segundo integrante"
+                value={listaIntegrantes[1].boleta}
+                onChange={(e) => manejarCambioIntegrante(1, "boleta", e.target.value)}
+              />
+            </div>
+          )}
 
           {/* Botón de confirmar y registrar */}
           {integrantes > 0 && (
             <button
               type="button"
-              className="btn btn-primary w-100 mt-3 fade-in"
-              style={{
-                animation: "fadeIn 0.5s ease-in-out",
-              }}
+              className="btn btn-primary w-100 mt-3"
               onClick={confirmarRegistro}
             >
               Confirmar y Registrar
@@ -119,44 +130,7 @@ function FormularioDosIntegrantes() {
         </form>
       </div>
 
-      {/* Logo */}
-      <img
-        src={logo}
-        alt="Logo ESCOM"
-        className="mt-4"
-        style={{
-          width: "150px",
-          animation: "fadeIn 1s ease-in-out",
-        }}
-      />
-
-      {/* Modal (si lo necesitas para confirmaciones adicionales) */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmación</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="text-center">
-            <img
-              src={advertenciaIcono}
-              alt="Advertencia"
-              style={{
-                width: "50px",
-                marginBottom: "15px",
-              }}
-            />
-            <p>¿Estás seguro de que deseas registrar los integrantes?</p>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={confirmarRegistro}>
-            Confirmar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <img src={logo} alt="Logo ESCOM" className="mt-4" style={{ width: "150px" }} />
     </div>
   );
 }
