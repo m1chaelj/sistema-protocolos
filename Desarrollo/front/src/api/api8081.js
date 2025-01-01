@@ -7,19 +7,7 @@ const api8081 = axios.create({
 });
 
 // Función para enviar `multipart/form-data`
-api8081.sendFormData = async (url, formData) => {
-  try {
-    const response = await api8081.post(url, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response;
-  } catch (error) {
-    console.error("Error al enviar FormData:", error);
-    throw error;
-  }
-}
+
 api8081.sendFormData = async (url, data) => {
   const isFormData = data instanceof FormData;
 
