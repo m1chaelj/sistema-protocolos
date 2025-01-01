@@ -21,4 +21,15 @@ api8081.sendFormData = async (url, formData) => {
   }
 };
 
+// Función para realizar solicitudes GET
+api8081.getData = async (url, params = {}) => {
+  try {
+    const response = await api8081.get(url, { params });
+    return response;
+  } catch (error) {
+    console.error("Error al realizar solicitud GET:", error);
+    throw error;
+  }
+};
+
 export default api8081;

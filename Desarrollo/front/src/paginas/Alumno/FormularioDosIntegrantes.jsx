@@ -1,32 +1,31 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/api8081"; // Asegúrate de que api8081.js está configurado correctamente
+import api from "../../api/api8081";
 import "../../recursos/estilos/custom.css";
+import { Modal, Button } from "react-bootstrap";
 import advertenciaIcono from "../../recursos/imagenes/advertencia.png";
 import logo from "../../recursos/imagenes/logoESCOM.png";
-import { Modal, Button } from "react-bootstrap";
 
 function FormularioDosIntegrantes() {
   const [integrantes, setIntegrantes] = useState(0);
   const [listaIntegrantes, setListaIntegrantes] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [integranteIndex, setIntegranteIndex] = useState(null);
-  const [isNinguno, setIsNinguno] = useState(false);
   const navigate = useNavigate();
 
-  // Manejar el cambio de la cantidad de integrantes
+  // Manejar cambio en el selector de cantidad de integrantes
   const manejarCambioIntegrantes = (e) => {
     const cantidad = parseInt(e.target.value, 10);
     setIntegrantes(cantidad);
 
-    const nuevaLista = [];
-    for (let i = 0; i < cantidad; i++) {
-      nuevaLista.push({ nombre: "", boleta: "" });
-    }
+    // Crear lista dinámica para los integrantes
+    const nuevaLista = Array.from({ length: cantidad }, () => ({
+      nombre: "",
+      boleta: "",
+    }));
     setListaIntegrantes(nuevaLista);
   };
 
-  // Manejar el cambio en los campos de cada integrante
+  // Manejar cambio en los campos dinámicos
   const manejarCambioIntegrante = (indice, campo, valor) => {
     setListaIntegrantes((prevLista) => {
       const nuevaLista = [...prevLista];
@@ -35,80 +34,40 @@ function FormularioDosIntegrantes() {
     });
   };
 
-  // Registrar un integrante en el backend
-  const registrarIntegrante = async (indice) => {
-    const integrante = listaIntegrantes[indice];
-
-    if (!integrante.nombre || !integrante.boleta) {
-      alert("Por favor, completa los datos del integrante antes de enviar.");
+  // Enviar datos al backend
+  const confirmarRegistro = async () => {
+    if (listaIntegrantes.some((i) => !i.nombre || !i.boleta)) {
+      alert("Por favor, completa todos los campos de los integrantes.");
       return;
     }
 
     try {
-      const response = await api.post("/registro-protocolo/integrantes", {
-        nombre: integrante.nombre,
-        boleta: integrante.boleta,
-      });
+      const response = await api.post("/registro-protocolo/integrantes", listaIntegrantes);
 
       if (response.status === 200 || response.status === 201) {
-        alert("Integrante registrado correctamente.");
-        navigate("/alumno/formulario-dos-integrantes", { replace: true });
+        alert("Integrantes registrados correctamente.");
+        navigate("/alumno/pagina-inicio", { replace: true });
       } else {
-        alert("Error al registrar el integrante. Intenta de nuevo.");
+        alert("Error al registrar los integrantes. Intenta de nuevo.");
       }
     } catch (error) {
-      console.error("Error al registrar el integrante:", error);
-      alert("Error al registrar el integrante. Intenta de nuevo.");
-    }
-  };
-
-  // Manejar el caso de "ningún integrante"
-  const manejarNingunIntegrante = async () => {
-    try {
-      const response = await api.post("/registro-protocolo/integrantes", { integrantes: null });
-
-      if (response.status === 200 || response.status === 201) {
-        alert("Registro completado sin integrantes.");
-        navigate("/alumno/estado-protocolo");
-      } else {
-        alert("Error al registrar. Intenta de nuevo.");
-      }
-    } catch (error) {
-      console.error("Error al registrar:", error);
-      alert("Error al registrar. Intenta de nuevo.");
-    }
-  };
-
-  // Abrir el modal de confirmación
-  const abrirModal = (indice = null) => {
-    setIntegranteIndex(indice);
-    setIsNinguno(indice === null);
-    setShowModal(true);
-  };
-
-  // Confirmar el registro desde el modal
-  const confirmarRegistro = () => {
-    setShowModal(false);
-    if (isNinguno) {
-      manejarNingunIntegrante();
-    } else {
-      registrarIntegrante(integranteIndex);
+      console.error("Error al registrar los integrantes:", error);
+      alert("Error al registrar los integrantes. Intenta de nuevo.");
     }
   };
 
   return (
     <div className="body-background">
       <div className="card">
-        <h1>Registro de integrantes</h1>
+        <h1 className="text-center">Registro de Integrantes</h1>
         <form>
-          <div>
-            <label htmlFor="integrantes">
+          <div className="mb-3">
+            <label htmlFor="integrantes" className="form-label">
               Cantidad de integrantes secundarios:
             </label>
             <select
-              className="form-control select-small"
+              className="form-control"
               id="integrantes"
-              name="integrantes"
               value={integrantes}
               onChange={manejarCambioIntegrantes}
             >
@@ -117,80 +76,77 @@ function FormularioDosIntegrantes() {
               <option value={2}>Dos</option>
             </select>
           </div>
-          {integrantes === 0 && (
-            <button
-              type="button"
-              className="btn btn-primary w-100 mt-3"
-              onClick={() => abrirModal()}
-            >
-              Confirmar sin integrantes
-            </button>
-          )}
+
+          {/* Campos dinámicos */}
           {listaIntegrantes.map((integrante, index) => (
-            <div key={index} className="dynamic-fields">
+            <div
+              key={index}
+              className="fade-in dynamic-fields"
+              style={{
+                animation: "fadeIn 0.5s ease-in-out",
+              }}
+            >
               <input
                 type="text"
                 className="form-control mb-3"
-                placeholder="Nombre del integrante"
+                placeholder={`Nombre del integrante ${index + 1}`}
                 value={integrante.nombre}
-                onChange={(e) =>
-                  manejarCambioIntegrante(index, "nombre", e.target.value)
-                }
+                onChange={(e) => manejarCambioIntegrante(index, "nombre", e.target.value)}
               />
               <input
                 type="text"
                 className="form-control mb-3"
-                placeholder="Número de boleta"
+                placeholder={`Boleta del integrante ${index + 1}`}
                 value={integrante.boleta}
-                onChange={(e) =>
-                  manejarCambioIntegrante(index, "boleta", e.target.value)
-                }
+                onChange={(e) => manejarCambioIntegrante(index, "boleta", e.target.value)}
               />
-              <button
-                type="button"
-                className="btn btn-primary mb-3"
-                onClick={() => abrirModal(index)}
-              >
-                Registrar este integrante
-              </button>
             </div>
           ))}
+
+          {/* Botón de confirmar y registrar */}
+          {integrantes > 0 && (
+            <button
+              type="button"
+              className="btn btn-primary w-100 mt-3 fade-in"
+              style={{
+                animation: "fadeIn 0.5s ease-in-out",
+              }}
+              onClick={confirmarRegistro}
+            >
+              Confirmar y Registrar
+            </button>
+          )}
         </form>
       </div>
+
+      {/* Logo */}
       <img
         src={logo}
         alt="Logo ESCOM"
         className="mt-4"
-        style={{ width: "150px" }}
+        style={{
+          width: "150px",
+          animation: "fadeIn 1s ease-in-out",
+        }}
       />
 
-      {/* Modal de confirmación */}
+      {/* Modal (si lo necesitas para confirmaciones adicionales) */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmación</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="advertencia text-center">
+          <div className="text-center">
             <img
               src={advertenciaIcono}
-              alt="Icono de advertencia"
+              alt="Advertencia"
               style={{
                 width: "50px",
                 marginBottom: "15px",
-                display: "block",
-                marginLeft: "auto",
-                marginRight: "auto",
               }}
             />
-            <span style={{ fontWeight: "bold", fontSize: "20px", display: "block" }}>
-              ADVERTENCIA
-            </span>
+            <p>¿Estás seguro de que deseas registrar los integrantes?</p>
           </div>
-          <p style={{ textAlign: "center", marginTop: "10px", fontSize: "20px" }}>
-            {isNinguno
-              ? "Se confirmará que no hay integrantes secundarios. ¿Estás seguro?"
-              : "Se enviará la información de este integrante al servidor. ¿Estás seguro?"}
-          </p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>

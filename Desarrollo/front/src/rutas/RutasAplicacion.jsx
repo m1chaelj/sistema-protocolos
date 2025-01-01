@@ -16,6 +16,8 @@ import FormularioUnoDatos from '../paginas/Alumno/FormularioUnoDatos';
 import FormularioUnoArchivo from '../paginas/Alumno/FormularioUnoArchivo';
 import FormularioDosIntegrantes from '../paginas/Alumno/FormularioDosIntegrantes';
 import EstadoProtocolo from '../paginas/Alumno/EstadoProtocolo'; // Asegúrate de tener este componente
+import CorreccionProtocolo from '../paginas/Alumno/CorreccionProtocolo'; // Asegúrate de tener este componente
+import InicioAlumno from '../paginas/Alumno/InicioAlumno';
 
 const RutasAplicacion = () => {
   return (
@@ -36,6 +38,8 @@ const RutasAplicacion = () => {
       <Route path="alumno/formulario-uno-archivo" element={<FormularioUnoArchivo />} />
       <Route path="/alumno/formulario-dos-integrantes" element={<FormularioDosIntegrantes />} />
       <Route path="/alumno/estado-protocolo" element={<EstadoProtocolo />} />
+      <Route path="/alumno/correccion-protocolo" element={<CorreccionProtocolo />} />
+      <Route path="/alumno/pagina-inicio" element = {<InicioAlumno/>} />
     </Routes>
   );
 };
