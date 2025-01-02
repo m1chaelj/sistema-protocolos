@@ -17,6 +17,10 @@ function RecepcionEvaluaciones() {
     navigate("/inicio");
   };
 
+  const irADistribucionAcademias = () => {
+    navigate("/secretario/distribucion-academias");
+  };
+
   const fetchEvaluaciones = async () => {
     setIsLoading(true);
     setIsVisible(false); // Ocultar la tabla antes de cargar nuevos datos
@@ -71,6 +75,31 @@ function RecepcionEvaluaciones() {
         }}
       >
         Cerrar sesión
+      </div>
+
+      {/* Botón para regresar a Distribución de Academias */}
+      <div
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "10px", // Posicionado en la esquina superior derecha
+          color: "#FFFFFF",
+          fontWeight: "bold",
+          fontSize: "16px",
+          cursor: "pointer",
+          transition: "color 0.3s, text-shadow 0.3s",
+        }}
+        onClick={irADistribucionAcademias}
+        onMouseEnter={(e) => {
+          e.target.style.color = "#007BFF";
+          e.target.style.textShadow = "0 0 10px #FFD700";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.color = "#FFFFFF";
+          e.target.style.textShadow = "none";
+        }}
+      >
+        Distribución a Academias
       </div>
 
       {/* Contenido principal */}
