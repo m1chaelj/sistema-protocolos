@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../../recursos/estilos/custom.css";
 import logo from "../../recursos/imagenes/logoESCOM.png";
 
-function InicioSecretario() {
+function InicioSinodal() {
   const navigate = useNavigate();
 
   const cerrarSesion = () => {
@@ -12,8 +12,8 @@ function InicioSecretario() {
     navigate("/inicio");
   };
 
-  const visualizarPaginasSecretario = () => {
-    navigate("/secretario/distribucion-academias");
+  const visualizarProtocolosAsignados = () => {
+    navigate("/sinodal/protocolos-asignados");
   };
 
   return (
@@ -76,7 +76,7 @@ function InicioSecretario() {
           Bienvenid@
         </h1>
         <button
-          onClick={visualizarPaginasSecretario}
+          onClick={visualizarProtocolosAsignados}
           className="btn btn-primary"
           style={{
             fontSize: "18px",
@@ -85,11 +85,11 @@ function InicioSecretario() {
             fontWeight: "bold",
           }}
         >
-          Ir a inspeccionar protocolos.
+          Ir a inspeccionar protocolos asignados.
         </button>
       </div>
     </div>
   );
 }
 
-export default InicioSecretario;
+export default InicioSinodal;

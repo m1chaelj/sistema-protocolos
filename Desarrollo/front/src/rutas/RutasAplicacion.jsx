@@ -21,6 +21,11 @@ import CorreccionProtocolo from '../paginas/Alumno/CorreccionProtocolo'; // Aseg
 import InicioAlumno from '../paginas/Alumno/InicioAlumno';
 //PAGINAS SECRETARIO
 import InicioSecretario from '../paginas/Secretario/InicioSecretario';
+import DistribucionAcademias from '../paginas/Secretario/DistribucionAcademias';
+import RecepcionEvaluaciones from '../paginas/Secretario/RecepcionEvaluaciones';
+//PAGINAS SINODAL
+import InicioSinodal from '../paginas/Sinodal/InicioSinodal';
+import ProtocolosAsignados from '../paginas/Sinodal/ProtocolosAsignados';
 
 const RutasAplicacion = () => {
   return (
@@ -47,8 +52,11 @@ const RutasAplicacion = () => {
       <Route path="/alumno/pagina-inicio" element = {<InicioAlumno/>} />
       {/* Nuevas rutas para el secretario */}
       <Route path="/secretario/pagina-inicio" element = {<InicioSecretario/>} />
-
-
+      <Route path="/secretario/distribucion-academias" element = {<DistribucionAcademias/>} />
+      <Route path="/secretario/recepcion-evaluaciones" element = {<RecepcionEvaluaciones/>} />
+      {/* Nuevas rutas para el secretario */}
+      <Route path="/sinodal/pagina-inicio" element = {<InicioSinodal/>} />
+      <Route path="/sinodal/protocolos-asignados" element = {<ProtocolosAsignados/>} />
     </Routes>
   );
 };
