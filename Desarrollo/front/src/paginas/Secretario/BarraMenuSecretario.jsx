@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../recursos/estilos/custom.css';
-import menuIcon from '../recursos/imagenes/menu-icon.png'; // Icono del menú
+import '../../recursos/estilos/custom.css';
+import menuIcon from '../../recursos/imagenes/menu-icon.png'; // Icono del menú
 
-function BarraMenu() {
+function BarraMenuSecretario() {
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   const alternarMenu = () => {
@@ -21,16 +21,10 @@ function BarraMenu() {
       <nav className={`menu-contenido ${menuAbierto ? 'mostrar' : ''}`}>
         <ul>
           <li>
-            <Link to="/registro-protocolo">Registro del Protocolo</Link>
+            <Link to="/secretario/distribucion-academias">Distribucion Academias</Link>
           </li>
           <li>
-            <Link to="/estado-protocolo">Estado del Protocolo</Link>
-          </li>
-          <li>
-            <Link to="/correccion-protocolo">Corrección de Protocolo</Link>
-          </li>
-          <li className="cerrar-sesion">
-            <Link to="/">Cerrar Sesión</Link>
+            <Link to="/secretario/recepcion-evaluaciones">Recepcion de Evaluaciones</Link>
           </li>
         </ul>
       </nav>
@@ -38,4 +32,4 @@ function BarraMenu() {
   );
 }
 
-export default BarraMenu;
+export default BarraMenuSecretario;

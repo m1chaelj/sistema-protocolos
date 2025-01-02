@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api8082";
 import "../../recursos/estilos/custom.css";
@@ -8,6 +8,7 @@ import logo from "../../recursos/imagenes/logoESCOM.png";
 function DistribucionProtocolos() {
   const [protocolos, setProtocolos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false); // Controla si se muestran los protocolos
   const navigate = useNavigate();
 
   const cerrarSesion = () => {
@@ -18,10 +19,12 @@ function DistribucionProtocolos() {
 
   const fetchProtocolos = async () => {
     setIsLoading(true);
+    setIsVisible(false); // Ocultar la tabla antes de cargar nuevos datos
     try {
       const response = await api.get("/secretario/vista-distribucion-protocolos");
       if (response.data && response.data.length > 0) {
         setProtocolos(response.data);
+        setTimeout(() => setIsVisible(true), 500); // Mostrar tabla después de la animación
       } else {
         alert("No se encontraron protocolos.");
       }
@@ -32,10 +35,6 @@ function DistribucionProtocolos() {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchProtocolos();
-  }, []);
 
   return (
     <div className="body-background">
@@ -79,32 +78,41 @@ function DistribucionProtocolos() {
                 </div>
               </div>
             ) : (
-              <div className="table-responsive">
-                <table className="table table-bordered table-hover text-center">
-                  <thead className="table-primary">
-                    <tr>
-                      <th>Estudiante Principal</th>
-                      <th>Directores</th>
-                      <th>Título del Protocolo</th>
-                      <th>N° Registro</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {protocolos.map((protocolo, index) => (
-                      <tr key={index}>
-                        <td>{protocolo.nombreEstudiante}</td>
-                        <td>
-                          {protocolo.primerDirector}
-                          <br />
-                          {protocolo.segundoDirector}
-                        </td>
-                        <td>{protocolo.tituloProtocolo}</td>
-                        <td>{protocolo.registro}</td>
+              isVisible && ( // Mostrar la tabla solo si `isVisible` es true
+                <div
+                  className={`table-responsive fade-in`}
+                  style={{
+                    opacity: isVisible ? 1 : 0,
+                    animationDuration: "1.5s", // Ajuste de duración
+                    transition: "opacity 1.5s ease-in-out", // Más lento
+                  }}
+                >
+                  <table className="table table-bordered table-hover text-center">
+                    <thead className="table-primary">
+                      <tr>
+                        <th>Estudiante Principal</th>
+                        <th>Directores</th>
+                        <th>Título del Protocolo</th>
+                        <th>N° Registro</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {protocolos.map((protocolo, index) => (
+                        <tr key={index}>
+                          <td>{protocolo.nombreEstudiante}</td>
+                          <td>
+                            {protocolo.primerDirector}
+                            <br />
+                            {protocolo.segundoDirector}
+                          </td>
+                          <td>{protocolo.tituloProtocolo}</td>
+                          <td>{protocolo.registro}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )
             )}
           </div>
         </div>
