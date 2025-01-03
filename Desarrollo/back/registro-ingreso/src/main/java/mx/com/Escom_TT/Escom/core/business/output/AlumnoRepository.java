@@ -7,7 +7,6 @@ import java.util.Optional;
 public interface AlumnoRepository {
 
     Alumno save(Alumno alumno);
-    boolean validarExisteBoletaAlumno(Integer boleta);
     boolean verificarInicioSesion(Integer boleta, String contrasena);
     Optional<Alumno> findByBoleta(Integer boleta);
 }

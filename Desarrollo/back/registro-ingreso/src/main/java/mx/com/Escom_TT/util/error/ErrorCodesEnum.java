@@ -6,6 +6,7 @@ public enum ErrorCodesEnum {
      */
     RNN001("Formato invalido para su identificador"),
     RNN002("Formato invalido para correo"),
+    RNN003("Boleta duplicada"),
     RNN004("Formato invalido de contraseña"),
     RNN006("Formato invalido para acronimos"),
     RNN007("Usuario no encontrado"),

@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface SecretarioRepository {
 
     Secretario save(Secretario secretario);
-    boolean validarExisteBoletaSecretario(Integer boleta);
     boolean verificarInicioSesion(Integer boleta, String contrasena);
     Optional<Secretario> findByBoleta(Integer boleta);
 

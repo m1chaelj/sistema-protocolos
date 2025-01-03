@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface SinodalRepository {
 
     Sinodal save (Sinodal sinodal);
-    boolean validarExisteBoletaSinodal(Integer boleta);
     boolean verificarInicioSesion(Integer boleta, String contrasena);
     Optional<Sinodal> findByBoleta(Integer boleta);
 

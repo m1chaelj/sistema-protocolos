@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Objects;
 
 @Builder

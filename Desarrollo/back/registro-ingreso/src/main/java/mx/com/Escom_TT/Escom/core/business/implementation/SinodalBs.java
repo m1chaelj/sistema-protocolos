@@ -1,5 +1,7 @@
 package mx.com.Escom_TT.Escom.core.business.implementation;
 
+import io.quarkus.mailer.Mail;
+import io.quarkus.mailer.Mailer;
 import io.vavr.control.Either;
 import io.vertx.redis.client.Command;
 import io.vertx.redis.client.Redis;
@@ -23,6 +25,8 @@ public class SinodalBs implements SinodalService{
     SinodalRepository sinodalRepository;
     @Inject
     Redis redisClient;
+    @Inject
+    Mailer mailer;
 
     public Either<ErrorCodesEnum, Sinodal> create(Sinodal entity) {
         Either<ErrorCodesEnum, Sinodal> result;
@@ -34,7 +38,7 @@ public class SinodalBs implements SinodalService{
         }
 
         if (validarExisteBoletaSinodal(entity.getBoleta())) {
-            return Either.left(ErrorCodesEnum.RNN001);
+            return Either.left(ErrorCodesEnum.RNN003);
         }
 
         String email = entity.getCorreoElectronico();
@@ -54,8 +58,30 @@ public class SinodalBs implements SinodalService{
             return Either.left(ErrorCodesEnum.RNN006);
         }
 
-        entity.setIdEstado(1);
-        entity.setIdEstadoVerificacion(1);
+        String confirmationLink = "http://localhost:3000/inicio/sinodal";
+
+        mailer.send(
+                Mail.withHtml(
+                        email,
+                        "Confirmación de Registro",
+                        "<div style='background-color: #003366; padding: 10px; text-align: center;'>" +
+                                "<h1 style='color: white; font-family: Arial, sans-serif; text-transform: uppercase; font-weight: bold; font-size: 50px; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);'>" +
+                                "ESCOM" +
+                                "</h1>" +
+                                "</div>" +
+                                "<div style='background-color: #f4f4f4; padding: 20px; font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>" +
+                                "<h1 style='color: #003366; font-size: 28px;'>¡Bienvenido a Protocolos-ESCOM!</h1>" +
+                                "<p style='font-size: 18px; color: #555;'>Gracias por registrarte, <b>" + entity.getNombre() + " " + entity.getApellidoPaterno() + "</b>.</p>" +
+                                "<p style='font-size: 18px; color: #555;'>Da click para confirmar tu registro:</p>" +
+                                "<p><a href='" + confirmationLink + "' style='color: blue; font-size: 22px; font-weight: bold;'>Confirmar Registro</a></p>" +
+                                "<p style='font-size: 18px; color: #555;'>Por favor, da click para comenzar.</p>" +
+                                "<p style='font-size: 18px; color: #555;'>Saludos,<br>El equipo de ESCOM</p>" +
+                                "</div>"
+                )
+        );
+
+            entity.setIdEstado(2);
+            entity.setIdEstadoVerificacion(1);
 
         Sinodal sinodalpersist = sinodalRepository.save(entity);
         result = Either.right(sinodalpersist);
@@ -98,7 +124,7 @@ public class SinodalBs implements SinodalService{
 
 
     private boolean validarExisteBoletaSinodal(Integer boleta) {
-        return sinodalRepository.validarExisteBoletaSinodal(boleta);
+        return sinodalRepository.findByBoleta(boleta).isPresent();
     }
 
     private boolean verificarInicioSesion(Integer boleta, String contrasena) {
