@@ -21,11 +21,6 @@ public class SinodalDao implements SinodalRepository {
     SinodalJpaRepository sinodalJpaRepository;
 
     @Override
-    public boolean validarExisteBoletaSinodal(Integer boleta) {
-        return sinodalJpaRepository.existsById(boleta);
-    }
-
-    @Override
     public boolean verificarInicioSesion(Integer boleta, String contrasena) {
         return sinodalJpaRepository.existsByBoletaAndContrasena(boleta, contrasena);
     }

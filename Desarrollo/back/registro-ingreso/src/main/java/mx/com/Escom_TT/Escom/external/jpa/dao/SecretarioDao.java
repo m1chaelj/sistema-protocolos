@@ -46,8 +46,4 @@ public class SecretarioDao implements SecretarioRepository {
         return secretarioJpaRepository.existsByBoletaAndContrasena(boleta, contrasena);
     }
 
-    @Override
-    public boolean validarExisteBoletaSecretario(Integer boleta) {
-        return secretarioJpaRepository.existsById(boleta);
-    }
 }
