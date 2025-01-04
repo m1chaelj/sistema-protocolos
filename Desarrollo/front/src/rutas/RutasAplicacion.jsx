@@ -45,7 +45,7 @@ const RutasAplicacion = () => {
       <Route path="/recuperar-contrasena" element={<RecuperarContrasena />} />
       {/* Nuevas rutas para el alumno */}
       <Route path="/alumno/formulario-uno-datos" element={<FormularioUnoDatos />} />
-      <Route path="alumno/formulario-uno-archivo" element={<FormularioUnoArchivo />} />
+      <Route path="/alumno/formulario-uno-archivo" element={<FormularioUnoArchivo />} />
       <Route path="/alumno/formulario-dos-integrantes" element={<FormularioDosIntegrantes />} />
       <Route path="/alumno/estado-protocolo" element={<EstadoProtocolo />} />
       <Route path="/alumno/correccion-protocolo" element={<CorreccionProtocolo />} />

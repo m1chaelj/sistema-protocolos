@@ -9,6 +9,7 @@ function DistribucionProtocolos() {
   const [protocolos, setProtocolos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [selectedPDF, setSelectedPDF] = useState(null); // Estado para el PDF seleccionado
   const navigate = useNavigate();
 
   const cerrarSesion = () => {
@@ -37,10 +38,8 @@ function DistribucionProtocolos() {
   };
 
   const visualizarPDF = (archivo) => {
-    const pdfWindow = window.open();
-    pdfWindow.document.write(
-      `<iframe src="data:application/pdf;base64,${archivo}" width="100%" height="100%" style="border:none;"></iframe>`
-    );
+    const pdfData = `data:application/pdf;base64,${archivo}`;
+    setSelectedPDF(pdfData); // Establecer el PDF seleccionado
   };
 
   const descargarPDF = (archivo) => {
@@ -52,7 +51,6 @@ function DistribucionProtocolos() {
 
   return (
     <div className="body-background">
-      {/* Botón de cerrar sesión */}
       <div
         style={{
           position: "absolute",
@@ -77,7 +75,6 @@ function DistribucionProtocolos() {
         Cerrar sesión
       </div>
 
-      {/* Contenido principal */}
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
         <div className="card shadow-lg p-4" style={{ width: "90%", maxWidth: "1200px" }}>
           <div className="card-body">
@@ -149,7 +146,61 @@ function DistribucionProtocolos() {
         </div>
       </div>
 
-      {/* Logo */}
+      {selectedPDF && (
+        <div
+          className="fixed-top d-flex justify-content-center align-items-center"
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            height: "100vh",
+            width: "100%",
+            zIndex: 1050,
+            overflow: "auto",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              maxWidth: "1400px",
+              maxHeight: "100vh",
+              backgroundColor: "#fff",
+              padding: "16px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <h1 className="text-center mb-4">Vista previa del protocolo</h1>
+            <iframe
+              src={selectedPDF}
+              style={{
+                flex: 1,
+                width: "100%",
+                height: "100%",
+                border: "none",
+                borderRadius: "8px",
+                overflow: "auto",
+              }}
+              title="Vista previa del PDF"
+            ></iframe>
+            <button
+              className="btn btn-danger"
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                zIndex: 1060,
+              }}
+              onClick={() => setSelectedPDF(null)}
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="text-center mt-4">
         <img
           src={logo}

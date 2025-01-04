@@ -24,10 +24,18 @@ function FormularioUnoArchivo() {
   };
 
   const manejarArchivo = (e) => {
-    setDatosFormulario({
-      ...datosFormulario,
-      file: e.target.files[0],
-    });
+    const archivo = e.target.files[0];
+    if (archivo) {
+      if (archivo.size > 1024 * 1024) { // 1 MB en bytes
+        setErrorMessage("El archivo supera el límite de 1 MB. Por favor, selecciona un archivo más pequeño.");
+        setShowErrorModal(true);
+        return;
+      }
+      setDatosFormulario({
+        ...datosFormulario,
+        file: archivo,
+      });
+    }
   };
 
   const enviarArchivo = async () => {
@@ -81,7 +89,7 @@ function FormularioUnoArchivo() {
         <form>
           <div className="mb-3">
             <label htmlFor="nombreArchivo" className="form-label">
-              Nombre del archivo (agregar al final .pdf)
+              Nombre del archivo, max. 1 MB (agregar al final .pdf)
             </label>
             <input
               type="text"
