@@ -4,6 +4,8 @@ import api from "../../api/api8082";
 import "../../recursos/estilos/custom.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../../recursos/imagenes/logoESCOM.png";
+import ojoIcono from "../../recursos/imagenes/ojo.png";
+import descargarIcono from "../../recursos/imagenes/descargar-pdf.png";
 
 function DistribucionProtocolos() {
   const [protocolos, setProtocolos] = useState([]);
@@ -243,18 +245,18 @@ function DistribucionProtocolos() {
                           </td>
                           <td>
                             <div className="d-flex justify-content-center gap-3">
-                              <button
-                                className="btn btn-secondary"
+                              <img
+                                src={ojoIcono}
+                                alt="Visualizar PDF"
+                                style={{ cursor: "pointer", width: "45px" }}
                                 onClick={() => visualizarPDF(protocolo.archivo)}
-                              >
-                                Visualizar PDF
-                              </button>
-                              <button
-                                className="btn btn-success"
+                              />
+                              <img
+                                src={descargarIcono}
+                                alt="Descargar PDF"
+                                style={{ cursor: "pointer", width: "45px" }}
                                 onClick={() => descargarPDF(protocolo.archivo)}
-                              >
-                                Descargar PDF
-                              </button>
+                              />
                             </div>
                           </td>
                           <td>{protocolo.registro}</td>

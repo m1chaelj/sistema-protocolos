@@ -25,6 +25,12 @@ function FormularioDosIntegrantes() {
   const confirmarRegistro = async () => {
     const [integrante1, integrante2] = listaIntegrantes;
 
+    if (integrantes === 0) {
+      alert("No hay integrantes secundarios que registrar.");
+      navigate("/alumno/pagina-inicio", { replace: true });
+      return;
+    }
+
     if (!integrante1.nombre || !integrante1.boleta) {
       alert("Por favor, completa los datos del primer integrante.");
       return;
@@ -118,15 +124,13 @@ function FormularioDosIntegrantes() {
           )}
 
           {/* Botón de confirmar y registrar */}
-          {integrantes > 0 && (
-            <button
-              type="button"
-              className="btn btn-primary w-100 mt-3"
-              onClick={confirmarRegistro}
-            >
-              Confirmar y Registrar
-            </button>
-          )}
+          <button
+            type="button"
+            className="btn btn-primary w-100 mt-3"
+            onClick={confirmarRegistro}
+          >
+            Confirmar y Registrar
+          </button>
         </form>
       </div>
 
