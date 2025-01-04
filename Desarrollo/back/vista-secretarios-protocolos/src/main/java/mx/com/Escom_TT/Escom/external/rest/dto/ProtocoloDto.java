@@ -20,6 +20,8 @@ public class ProtocoloDto {
     private String nombreEstudiante;
     @JsonProperty
     private String tituloProtocolo;
+    @JsonProperty
+    private byte[] archivo;
 
 
 
@@ -30,6 +32,7 @@ public class ProtocoloDto {
                 .registro(protocolo.getRegistro())
                 .nombreEstudiante(protocolo.getNombreEstudiante())
                 .tituloProtocolo(protocolo.getTituloProtocolo())
+                .archivo(protocolo.getArchivo())
                 .build();
     }
 }

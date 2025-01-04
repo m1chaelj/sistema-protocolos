@@ -26,15 +26,17 @@ ProtocoloJpaRepository vistaSecretarioJpaRepository;
 EntityManager em;
 
     private static final String QUERY_FIND_TODOS_PROTOCOLOS = "SELECT" +
-            "    p.registro AS numero_registro_tt," +
-            "    p.nombre AS titulo_protocolo," +
-            "    p.nombre_primer_director AS primer_director," +
-            "    p.nombre_segundo_director AS segundo_director," +
-            "    a.nombre || ' ' || a.apellido_paterno || ' ' || a.apellido_materno AS estudiante_principal " +
+            "    p.registro AS numero_registro_tt, " +
+            "    p.nombre AS titulo_protocolo, " +
+            "    p.nombre_primer_director AS primer_director, " +
+            "    p.nombre_segundo_director AS segundo_director, " +
+            "    a.nombre || ' ' || a.apellido_paterno || ' ' || a.apellido_materno AS estudiante_principal, " +
+            "    ar.archivo AS archivo_pdf " +
             "FROM " +
             "    protocolo p " +
             "LEFT JOIN integrantes i ON p.id_protocolo = i.fk_id_protocolo " +
-            "LEFT JOIN alumno a ON i.fk_id_alumno = a.id_alumno";
+            "LEFT JOIN alumno a ON i.fk_id_alumno = a.id_alumno " +
+            "LEFT JOIN archivo ar ON p.id_protocolo = ar.fk_id_protocolo";
 
 
     private static final String QUERY_FIND_SINODAL_ACADEMIA= " SELECT CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre_completo " +
@@ -50,7 +52,9 @@ EntityManager em;
                 .tituloProtocolo((String)vista[1])
                 .primerDirector((String)vista[2])
                 .segundoDirector((String)vista[3])
-                .nombreEstudiante((String)vista[4]).build()
+                .nombreEstudiante((String)vista[4])
+                .archivo((byte[])vista[5])
+                .build()
         ).collect(Collectors.toList());
     }
 
