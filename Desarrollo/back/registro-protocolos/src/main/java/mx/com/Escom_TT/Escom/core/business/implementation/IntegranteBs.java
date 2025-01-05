@@ -23,10 +23,7 @@ IntegranteRepository integranteRepository;
 
         String boletaPattern = "\\d{10}";
 
-        if (entity.getNombre() == null || entity.getBoleta() == null || entity.getBoletaSegundoIntegrante() == null) {
-            result = Either.left(ErrorCodesEnum.RNN008);
-        }
-        else if (!entity.getBoleta().toString().matches(boletaPattern)
+     if (!entity.getBoleta().toString().matches(boletaPattern)
                 || !entity.getBoletaSegundoIntegrante().toString().matches(boletaPattern)) {
             result = Either.left(ErrorCodesEnum.RNS001);
         }
