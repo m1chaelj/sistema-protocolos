@@ -14,27 +14,13 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class IntegranteBs implements IntegranteService {
 
-@Inject
-IntegranteRepository integranteRepository;
+    @Inject
+    IntegranteRepository integranteRepository;
 
     @Override
     public Either<ErrorCodesEnum, Integrante> create(Integrante entity) {
-        Either<ErrorCodesEnum, Integrante> result;
-
-        String boletaPattern = "\\d{10}";
-
-     if (!entity.getBoleta().toString().matches(boletaPattern)
-                || !entity.getBoletaSegundoIntegrante().toString().matches(boletaPattern)) {
-            result = Either.left(ErrorCodesEnum.RNS001);
-        }
-        else {
-            Integrante integrantePersist = integranteRepository.save(entity);
-            result = Either.right(integrantePersist);
-        }
-
-        return result;
+        // Guardar directamente el usuario
+        Integrante integrantePersist = integranteRepository.save(entity);
+        return Either.right(integrantePersist);
     }
-
-
-
 }
