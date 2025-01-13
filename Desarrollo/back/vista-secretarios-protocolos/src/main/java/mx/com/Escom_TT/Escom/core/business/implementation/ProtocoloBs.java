@@ -9,7 +9,6 @@ import mx.com.Escom_TT.Escom.core.entity.Sinodal;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Optional;
 
 
 @Slf4j
@@ -28,5 +27,7 @@ public class ProtocoloBs implements ProtocoloService {
     public List <Sinodal> busquedaSinodalesAcademia(String academia) {
         return protocoloRepository.busquedaSinodalesAcademia(academia);
     }
+
+
 
 }

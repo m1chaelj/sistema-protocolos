@@ -1,8 +1,10 @@
 package mx.com.Escom_TT.Escom.external.jpa.dao;
 
 import mx.com.Escom_TT.Escom.core.business.output.ProtocoloRepository;
+import mx.com.Escom_TT.Escom.core.entity.EstadoFinalProtocolo;
 import mx.com.Escom_TT.Escom.core.entity.Protocolo;
 import mx.com.Escom_TT.Escom.core.entity.Sinodal;
+import mx.com.Escom_TT.Escom.external.jpa.model.EstadoFinalProtocoloJpa;
 import mx.com.Escom_TT.Escom.external.jpa.repository.ProtocoloJpaRepository;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -19,7 +21,7 @@ import javax.persistence.PersistenceUnit;
 public class ProtocoloDao implements ProtocoloRepository {
 
 @Inject
-ProtocoloJpaRepository vistaSecretarioJpaRepository;
+ProtocoloJpaRepository protocoloJpaRepository;
 
 @PersistenceUnit(name = "reading")
 @Inject
@@ -71,4 +73,6 @@ EntityManager em;
                     .collect(Collectors.toList());
         }
 
-    }
+
+
+}
