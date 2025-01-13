@@ -14,11 +14,6 @@ import mx.com.Escom_TT.Escom.core.entity.AlumnoSesion;
 import mx.com.Escom_TT.util.error.ErrorCodesEnum;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.io.File;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -51,9 +46,9 @@ public class AlumnoBs implements AlumnoService {
                 String sessionToken = UUID.randomUUID().toString();
                 log.info("Token generado para la sesión: {}", sessionToken);
                 redisClient.send(Request.cmd(Command.SETEX)
-                                .arg(sessionToken)
-                                .arg(3600)
-                                .arg(entity.getContrasena()));
+                        .arg(sessionToken)
+                        .arg(3600)
+                        .arg(entity.getContrasena()));
 
 
                 AlumnoSesion alumnoSesion = new AlumnoSesion(alumno, sessionToken);
@@ -67,7 +62,8 @@ public class AlumnoBs implements AlumnoService {
         }
     }
 
-    public Either<ErrorCodesEnum, Alumno> create(Alumno entity) {
+
+   public Either<ErrorCodesEnum, Alumno> create(Alumno entity) {
         Either<ErrorCodesEnum, Alumno> result;
 
         Integer id = entity.getBoleta();
@@ -125,12 +121,15 @@ public class AlumnoBs implements AlumnoService {
         return result;
     }
 
+
     private boolean verificarInicioSesion(Integer boleta, String contrasena) {
         return alumnoRepository.verificarInicioSesion(boleta, contrasena);
     }
 
-        private boolean validarExisteBoletaAlumno(Integer boleta) {
-       return alumnoRepository.findByBoleta(boleta).isPresent();
-        }
+    private boolean validarExisteBoletaAlumno(Integer boleta) {
+        return alumnoRepository.findByBoleta(boleta).isPresent();
+    }
+
+
 
 }
