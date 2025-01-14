@@ -11,5 +11,6 @@ public interface ProtocoloRepository {
 
     List<Protocolo> busquedaTodosProtocolos();
     List <Sinodal> busquedaSinodalesAcademia(String academia);
+    List <Protocolo> mostrarProtocolosEvaluados();
 
 }

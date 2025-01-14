@@ -17,6 +17,9 @@ public class Protocolo {
     private String nombreEstudiante;
     private String tituloProtocolo;
     private byte[] archivo;
+    private String academias;
+    private String sinodales;
+    private String evaluaciones;
 
 
 }

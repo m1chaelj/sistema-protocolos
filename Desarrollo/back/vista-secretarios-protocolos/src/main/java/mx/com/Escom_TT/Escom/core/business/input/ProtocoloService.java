@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface ProtocoloService {
     List<Protocolo> busquedaTodosProtocolos();
     List <Sinodal> busquedaSinodalesAcademia(String academia);
+    List <Protocolo> mostrarProtocolosEvaluados();
 }

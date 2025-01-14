@@ -28,6 +28,10 @@ public class ProtocoloBs implements ProtocoloService {
         return protocoloRepository.busquedaSinodalesAcademia(academia);
     }
 
+    @Override
+    public List<Protocolo> mostrarProtocolosEvaluados() {
+        return protocoloRepository
+    }
 
 
 }

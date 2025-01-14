@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface EstadoFinalProtocoloRepository {
     EstadoFinalProtocolo save(EstadoFinalProtocolo estadofProtocolo);
-    Optional<EstadoFinalProtocolo> findFirstAvailable(); // Nuevo método
+    Optional<EstadoFinalProtocolo> findFirstAvailable();
 }
