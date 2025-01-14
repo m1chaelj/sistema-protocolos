@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api8081";
 import "../../recursos/estilos/custom.css";
-import advertenciaIcono from "../../recursos/imagenes/advertencia.png";
-import comprobadoIcono from "../../recursos/imagenes/comprobado.png";
 import logo from "../../recursos/imagenes/logoESCOM.png";
 import { Modal, Button } from "react-bootstrap";
 
 function FormularioUnoArchivo() {
+  const navigate = useNavigate();
   const [datosFormulario, setDatosFormulario] = useState({
     fileName: "",
     file: null,
@@ -16,26 +15,27 @@ function FormularioUnoArchivo() {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
+
+  // Cargar datos desde localStorage
+  useEffect(() => {
+    const datosGuardados = localStorage.getItem("formularioUnoArchivo");
+    if (datosGuardados) {
+      setDatosFormulario(JSON.parse(datosGuardados));
+    }
+  }, []);
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
-    setDatosFormulario({ ...datosFormulario, [name]: value });
+    const nuevosDatos = { ...datosFormulario, [name]: value };
+    setDatosFormulario(nuevosDatos);
+    localStorage.setItem("formularioUnoArchivo", JSON.stringify(nuevosDatos)); // Guardar en localStorage
   };
 
   const manejarArchivo = (e) => {
-    const archivo = e.target.files[0];
-    if (archivo) {
-      if (archivo.size > 1024 * 1024) { // 1 MB en bytes
-        setErrorMessage("El archivo supera el límite de 1 MB. Por favor, selecciona un archivo más pequeño.");
-        setShowErrorModal(true);
-        return;
-      }
-      setDatosFormulario({
-        ...datosFormulario,
-        file: archivo,
-      });
-    }
+    const file = e.target.files[0];
+    const nuevosDatos = { ...datosFormulario, file };
+    setDatosFormulario(nuevosDatos);
+    localStorage.setItem("formularioUnoArchivo", JSON.stringify(nuevosDatos)); // Guardar en localStorage
   };
 
   const enviarArchivo = async () => {
@@ -89,7 +89,7 @@ function FormularioUnoArchivo() {
         <form>
           <div className="mb-3">
             <label htmlFor="nombreArchivo" className="form-label">
-              Nombre del archivo, max. 1 MB (agregar al final .pdf)
+              Nombre del archivo (agregar al final .pdf)
             </label>
             <input
               type="text"
@@ -131,41 +131,14 @@ function FormularioUnoArchivo() {
           </div>
         </form>
       </div>
-      <div className="text-center mt-4">
-        <img
-          src={logo}
-          alt="Logo ESCOM"
-          className="mt-4"
-          style={{ width: "150px" }}
-        />
-      </div>
+      <img src={logo} alt="Logo ESCOM" className="mt-4" style={{ width: "150px" }} />
 
-      {/* Modal de confirmación */}
+      {/* Modal */}
       <Modal show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirmación</Modal.Title>
+          <Modal.Title>Confirmar envío</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <div className="advertencia text-center">
-            <img
-              src={advertenciaIcono}
-              alt="Icono de advertencia"
-              style={{
-                width: "50px",
-                marginBottom: "15px",
-                display: "block",
-                marginLeft: "auto",
-                marginRight: "auto",
-              }}
-            />
-            <span style={{ fontWeight: "bold", fontSize: "20px", display: "block" }}>
-              ADVERTENCIA
-            </span>
-          </div>
-          <p style={{ textAlign: "center", marginTop: "10px", fontSize: "16px" }}>
-            ¿Estás seguro de que deseas enviar el archivo? Esta acción no se puede deshacer.
-          </p>
-        </Modal.Body>
+        <Modal.Body>¿Estás seguro de enviar este archivo?</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowConfirmationModal(false)}>
             Cancelar
@@ -176,65 +149,23 @@ function FormularioUnoArchivo() {
         </Modal.Footer>
       </Modal>
 
-      {/* Modal de éxito */}
       <Modal show={showSuccessModal} onHide={cerrarModalExito}>
         <Modal.Header closeButton>
           <Modal.Title>Éxito</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <div className="advertencia text-center">
-            <img
-              src={comprobadoIcono}
-              alt="Icono de éxito"
-              style={{
-                width: "50px",
-                marginBottom: "15px",
-                display: "block",
-                marginLeft: "auto",
-                marginRight: "auto",
-              }}
-            />
-            <span style={{ fontWeight: "bold", fontSize: "20px", display: "block" }}>
-              ÉXITO
-            </span>
-          </div>
-          <p style={{ textAlign: "center", marginTop: "10px", fontSize: "16px" }}>
-            El archivo ha sido enviado correctamente.
-          </p>
-        </Modal.Body>
+        <Modal.Body>Archivo enviado correctamente.</Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={cerrarModalExito}>
+          <Button variant="secondary" onClick={cerrarModalExito}>
             Continuar
           </Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Modal de error */}
       <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Error</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <div className="advertencia text-center">
-            <img
-              src={advertenciaIcono}
-              alt="Icono de advertencia"
-              style={{
-                width: "50px",
-                marginBottom: "15px",
-                display: "block",
-                marginLeft: "auto",
-                marginRight: "auto",
-              }}
-            />
-            <span style={{ fontWeight: "bold", fontSize: "20px", display: "block" }}>
-              ERROR
-            </span>
-          </div>
-          <p style={{ textAlign: "center", marginTop: "10px", fontSize: "16px" }}>
-            {errorMessage}
-          </p>
-        </Modal.Body>
+        <Modal.Body>{errorMessage}</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowErrorModal(false)}>
             Cerrar
