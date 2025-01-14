@@ -25,6 +25,8 @@ public class EvaluacionDto {
     private String sinodales;
     @JsonProperty
     private String evaluaciones;
+    @JsonProperty
+    private Integer estadoProtocolo;
 
 
     public static EvaluacionDto fromEntity(Protocolo protocolo) {
@@ -36,6 +38,7 @@ public class EvaluacionDto {
                 .academias(protocolo.getAcademias())
                 .sinodales(protocolo.getSinodales())
                 .evaluaciones(protocolo.getEvaluaciones())
+                .estadoProtocolo(protocolo.getEstadoProtocolo())
                 .build();
     }
 }

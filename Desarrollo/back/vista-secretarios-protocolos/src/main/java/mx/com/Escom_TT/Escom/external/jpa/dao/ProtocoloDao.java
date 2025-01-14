@@ -76,7 +76,8 @@ EntityManager em;
                 "    STRING_AGG(efp.verificacion, ', ') AS evaluaciones, " +
                 "    STRING_AGG(DISTINCT efp.academia, ', ') AS academias, " +
                 "    STRING_AGG(DISTINCT efp.nombre_sinodal, ', ') AS sinodales, " +
-                "    p.registro AS numero_registro_tt " +
+                "    p.registro AS numero_registro_tt, " +
+                "    p.fk_id_estado AS estado " +
                 "FROM protocolo p " +
                 "LEFT JOIN integrantes i ON p.id_protocolo = i.fk_id_protocolo " +
                 "LEFT JOIN alumno a ON i.fk_id_alumno = a.id_alumno " +
@@ -85,7 +86,8 @@ EntityManager em;
                 "    estudiante_principal, " +
                 "    director, " +
                 "    titulo, " +
-                "    numero_registro_tt ";
+                "    numero_registro_tt, " +
+                "    estado ";
     @Override
     public List<Protocolo> mostrarProtocolosEvaluados() {
         Stream<Object[]> todasBusquedas= em.createNativeQuery(QUERY_BUSCA_EVALUACION_PROTOCOLOS).getResultStream();
@@ -96,7 +98,8 @@ EntityManager em;
                 .evaluaciones((String) secretarios[3])
                 .academias((String)secretarios[4])
                 .sinodales((String)secretarios[5])
-                .registro((String) secretarios[6]).build()).collect(Collectors.toList());
+                .registro((String) secretarios[6])
+                .estadoProtocolo((Integer) secretarios[7]).build()).collect(Collectors.toList());
     }
 
 

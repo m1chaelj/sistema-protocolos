@@ -20,6 +20,7 @@ public class Protocolo {
     private String academias;
     private String sinodales;
     private String evaluaciones;
+    private Integer estadoProtocolo;
 
 
 }
