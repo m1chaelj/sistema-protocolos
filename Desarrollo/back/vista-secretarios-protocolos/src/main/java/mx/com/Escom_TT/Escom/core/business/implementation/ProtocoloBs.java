@@ -30,7 +30,7 @@ public class ProtocoloBs implements ProtocoloService {
 
     @Override
     public List<Protocolo> mostrarProtocolosEvaluados() {
-        return protocoloRepository
+        return protocoloRepository.mostrarProtocolosEvaluados();
     }
 
 

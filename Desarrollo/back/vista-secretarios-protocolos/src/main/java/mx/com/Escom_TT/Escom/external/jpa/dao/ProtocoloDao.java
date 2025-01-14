@@ -1,17 +1,14 @@
 package mx.com.Escom_TT.Escom.external.jpa.dao;
 
 import mx.com.Escom_TT.Escom.core.business.output.ProtocoloRepository;
-import mx.com.Escom_TT.Escom.core.entity.EstadoFinalProtocolo;
 import mx.com.Escom_TT.Escom.core.entity.Protocolo;
 import mx.com.Escom_TT.Escom.core.entity.Sinodal;
-import mx.com.Escom_TT.Escom.external.jpa.model.EstadoFinalProtocoloJpa;
 import mx.com.Escom_TT.Escom.external.jpa.repository.ProtocoloJpaRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.PersistenceUnit;
@@ -72,7 +69,35 @@ EntityManager em;
                             .build())
                     .collect(Collectors.toList());
         }
-
+        private static String QUERY_BUSCA_EVALUACION_PROTOCOLOS="SELECT " +
+                "    a.nombre || ' ' || a.apellido_paterno || ' ' || a.apellido_materno AS estudiante_principal, " +
+                "    p.nombre_primer_director || ' y ' || p.nombre_segundo_director AS director, " +
+                "    p.nombre AS titulo, " +
+                "    STRING_AGG(efp.verificacion, ', ') AS evaluaciones, " +
+                "    STRING_AGG(DISTINCT efp.academia, ', ') AS academias, " +
+                "    STRING_AGG(DISTINCT efp.nombre_sinodal, ', ') AS sinodales, " +
+                "    p.registro AS numero_registro_tt " +
+                "FROM protocolo p " +
+                "LEFT JOIN integrantes i ON p.id_protocolo = i.fk_id_protocolo " +
+                "LEFT JOIN alumno a ON i.fk_id_alumno = a.id_alumno " +
+                "LEFT JOIN estado_final_protocolo efp ON p.id_protocolo = efp.fk_id_protocolo " +
+                "GROUP BY " +
+                "    estudiante_principal, " +
+                "    director, " +
+                "    titulo, " +
+                "    numero_registro_tt ";
+    @Override
+    public List<Protocolo> mostrarProtocolosEvaluados() {
+        Stream<Object[]> todasBusquedas= em.createNativeQuery(QUERY_BUSCA_EVALUACION_PROTOCOLOS).getResultStream();
+        return todasBusquedas.map(secretarios-> Protocolo.builder()
+                .nombreEstudiante((String)secretarios[0])
+                .primerDirector((String) secretarios[1])
+                .tituloProtocolo((String) secretarios[2])
+                .evaluaciones((String) secretarios[3])
+                .academias((String)secretarios[4])
+                .sinodales((String)secretarios[5])
+                .registro((String) secretarios[6]).build()).collect(Collectors.toList());
+    }
 
 
 }
