@@ -4,12 +4,15 @@ import api from "../../api/api8081";
 import "../../recursos/estilos/custom.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../../recursos/imagenes/logoESCOM.png";
+import { Modal, Button } from "react-bootstrap";
 
 function EstadoProtocolo() {
   const [nombre, setNombre] = useState(""); // Nombre del protocolo
   const [protocolo, setProtocolo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showFields, setShowFields] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const cerrarSesion = () => {
@@ -20,7 +23,8 @@ function EstadoProtocolo() {
 
   const buscarProtocolo = async () => {
     if (!nombre.trim()) {
-      alert("Por favor, ingresa el nombre del protocolo.");
+      setErrorMessage("Por favor, ingresa el nombre del protocolo.");
+      setShowErrorModal(true);
       return;
     }
 
@@ -32,12 +36,14 @@ function EstadoProtocolo() {
         setProtocolo(response.data[0]);
         setTimeout(() => setShowFields(true), 500); // Delay for transition
       } else {
-        alert("No se encontró el protocolo. Verifica el nombre.");
+        setErrorMessage("No se encontró el protocolo. Verifica el nombre.");
+        setShowErrorModal(true);
         setProtocolo(null);
       }
     } catch (error) {
       console.error("Error al obtener el protocolo:", error);
-      alert("Error al cargar el protocolo. Intenta de nuevo.");
+      setErrorMessage("Error al cargar el protocolo. Intenta de nuevo.");
+      setShowErrorModal(true);
     } finally {
       setIsLoading(false);
     }
@@ -185,9 +191,24 @@ function EstadoProtocolo() {
         <img
           src={logo}
           alt="Logo ESCOM"
-          style={{ width: "150px" }}
+          style={{
+            width: "150px",
+          }}
         />
       </div>
+
+      {/* Modales */}
+      <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Error</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{errorMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowErrorModal(false)}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

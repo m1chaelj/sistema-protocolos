@@ -31,9 +31,9 @@ function RegistroSelector() {
           value={perfil}
           onChange={(e) => setPerfil(e.target.value)}
         >
-          <option value="Estudiante">Estudiante</option>
+          <option value="Estudiante">Alumno</option>
           <option value="Sinodal">Sinodal</option>
-          <option value="Secretario">Secretario</option>
+          <option value="Secretario">Secretario CATT</option>
         </select>
         <button
           type="button"

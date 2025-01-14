@@ -8,7 +8,7 @@ import logo from "../../recursos/imagenes/logoESCOM.png";
 function RecepcionEvaluaciones() {
   const [evaluaciones, setEvaluaciones] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isVisible, setIsVisible] = useState(false); // Controla si se muestran las evaluaciones
+  const [isVisible, setIsVisible] = useState(false); // Controla la visibilidad de la tabla
   const navigate = useNavigate();
 
   const cerrarSesion = () => {
@@ -39,14 +39,14 @@ function RecepcionEvaluaciones() {
   };
 
   const badgeStyle = (estado) => ({
-    display: "inline-block",
+    display: "block", // Apilar estados verticalmente
     padding: "6px 12px",
     borderRadius: "10px",
     fontSize: "0.9rem",
     fontWeight: "bold",
     backgroundColor: estado === "Aprobado" ? "#28a745" : "#dc3545",
     color: "#fff",
-    margin: "2px",
+    marginBottom: "4px", // Espaciado entre estados
   });
 
   const cellStyle = {
@@ -71,7 +71,6 @@ function RecepcionEvaluaciones() {
 
   return (
     <div className="body-background">
-      {/* Botón de cerrar sesión */}
       <div
         style={{
           position: "absolute",
@@ -96,7 +95,6 @@ function RecepcionEvaluaciones() {
         Cerrar sesión
       </div>
 
-      {/* Contenido principal */}
       <div className="d-flex justify-content-center align-items-center" style={containerStyle}>
         <div className="card shadow-lg p-4" style={{ width: "90%", maxWidth: "1200px" }}>
           <div className="card-body">
@@ -113,7 +111,7 @@ function RecepcionEvaluaciones() {
             ) : (
               isVisible && (
                 <div
-                  className={`table-responsive fade-in`}
+                  className="table-responsive fade-in"
                   style={{
                     opacity: isVisible ? 1 : 0,
                     animationDuration: "1.5s",
@@ -181,7 +179,6 @@ function RecepcionEvaluaciones() {
         </div>
       </div>
 
-      {/* Logo */}
       <div className="text-center mt-4">
         <img
           src={logo}

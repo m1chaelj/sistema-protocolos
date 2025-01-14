@@ -1,12 +1,17 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../../api/api8083";
 import logo from "../../recursos/imagenes/logoESCOM.png";
+import { Modal, Button } from "react-bootstrap";
 
 function RecuperarContrasena() {
   const [boleta, setBoleta] = useState("");
   const [rol, setRol] = useState(""); // Para seleccionar el rol del usuario
   const [isLoading, setIsLoading] = useState(false); // Estado de carga
-  const [mensaje, setMensaje] = useState(""); // Mensaje de éxito o error
+  const [showModal, setShowModal] = useState(false); // Estado del modal
+  const [modalMessage, setModalMessage] = useState(""); // Mensaje del modal
+  const [modalType, setModalType] = useState("info"); // Tipo de mensaje: success, warning, error
+  const navigate = useNavigate();
 
   const manejarCambioBoleta = (e) => {
     setBoleta(e.target.value);
@@ -17,26 +22,56 @@ function RecuperarContrasena() {
   };
 
   const recuperarContrasena = async () => {
-    if (!boleta || !rol) {
-      alert("Por favor, ingresa la boleta y selecciona un rol.");
+    // Validaciones
+    if (!boleta.trim() && !rol.trim()) {
+      setModalMessage("Por favor, ingresa tu boleta y selecciona un rol.");
+      setModalType("warning");
+      setShowModal(true);
+      return;
+    }
+
+    if (!boleta.trim()) {
+      setModalMessage("Por favor, ingresa tu boleta.");
+      setModalType("warning");
+      setShowModal(true);
+      return;
+    }
+
+    if (!rol.trim()) {
+      setModalMessage("Por favor, selecciona un rol.");
+      setModalType("warning");
+      setShowModal(true);
       return;
     }
 
     setIsLoading(true);
-    setMensaje("");
+    setModalMessage("");
 
     try {
       const response = await api.post(`/${rol}/recuperar/${boleta}`);
       if (response.status === 200) {
-        setMensaje("Correo de recuperación enviado exitosamente. Revisa tu bandeja.");
+        setModalMessage("Correo de recuperación enviado exitosamente. Revisa tu bandeja.");
+        setModalType("success");
+        setShowModal(true);
       } else {
-        setMensaje("No se pudo enviar el correo de recuperación. Intenta nuevamente.");
+        setModalMessage("No se pudo enviar el correo de recuperación. Intenta nuevamente.");
+        setModalType("warning");
+        setShowModal(true);
       }
     } catch (error) {
       console.error("Error al recuperar la contraseña:", error.response?.data || error.message);
-      setMensaje("Ocurrió un error. Por favor, intenta de nuevo.");
+      setModalMessage("Ocurrió un error al procesar tu solicitud. Por favor, intenta de nuevo.");
+      setModalType("danger");
+      setShowModal(true);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const cerrarModal = () => {
+    setShowModal(false);
+    if (modalType === "success") {
+      navigate("/inicio"); // Redirige a la pantalla de inicio si el mensaje fue exitoso
     }
   };
 
@@ -91,9 +126,22 @@ function RecuperarContrasena() {
             )}
           </button>
         </form>
-        {mensaje && <div className="alert alert-info mt-3">{mensaje}</div>}
       </div>
+
       <img src={logo} alt="Logo ESCOM" className="mt-4" style={{ width: "150px" }} />
+
+      {/* Modal para mostrar mensajes */}
+      <Modal show={showModal} onHide={cerrarModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalType === "success" ? "Éxito" : modalType === "warning" ? "Advertencia" : "Error"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={cerrarModal}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

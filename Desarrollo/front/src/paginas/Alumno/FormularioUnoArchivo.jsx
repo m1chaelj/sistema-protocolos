@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api8081";
 import "../../recursos/estilos/custom.css";
@@ -11,163 +11,96 @@ function FormularioUnoArchivo() {
     fileName: "",
     file: null,
   });
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  // Cargar datos desde localStorage
-  useEffect(() => {
-    const datosGuardados = localStorage.getItem("formularioUnoArchivo");
-    if (datosGuardados) {
-      setDatosFormulario(JSON.parse(datosGuardados));
-    }
-  }, []);
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState("success");
+  const [modalMessage, setModalMessage] = useState("");
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
-    const nuevosDatos = { ...datosFormulario, [name]: value };
-    setDatosFormulario(nuevosDatos);
-    localStorage.setItem("formularioUnoArchivo", JSON.stringify(nuevosDatos)); // Guardar en localStorage
+    setDatosFormulario((prevDatos) => ({ ...prevDatos, [name]: value }));
   };
 
   const manejarArchivo = (e) => {
     const file = e.target.files[0];
-    const nuevosDatos = { ...datosFormulario, file };
-    setDatosFormulario(nuevosDatos);
-    localStorage.setItem("formularioUnoArchivo", JSON.stringify(nuevosDatos)); // Guardar en localStorage
+    setDatosFormulario((prevDatos) => ({ ...prevDatos, file }));
   };
 
   const enviarArchivo = async () => {
+    const { fileName, file } = datosFormulario;
+
+    // Validación: Verificar que el nombre del archivo termine con ".pdf"
+    if (!fileName.endsWith(".pdf")) {
+      setModalType("warning");
+      setModalMessage("El nombre del archivo debe terminar con '.pdf'.");
+      setShowModal(true);
+      return;
+    }
+
+    if (!file || !fileName) {
+      setModalType("warning");
+      setModalMessage("Por favor, completa todos los campos antes de enviar.");
+      setShowModal(true);
+      return;
+    }
+
     try {
       const formData = new FormData();
-      formData.append("fileName", datosFormulario.fileName);
-      formData.append("file", datosFormulario.file);
+      formData.append("fileName", fileName);
+      formData.append("file", file);
 
       const response = await api.sendFormData("/subir-pdf/archivo", formData);
 
       if (response.status === 200 || response.status === 201) {
-        setShowSuccessModal(true);
+        setModalType("success");
+        setModalMessage("Archivo enviado correctamente.");
+        setShowModal(true);
+        setTimeout(() => navigate("/alumno/estado-protocolo"), 2000);
       } else {
-        setErrorMessage("Error al enviar el archivo. Intenta de nuevo.");
-        setShowErrorModal(true);
+        throw new Error("Error al enviar el archivo.");
       }
     } catch (error) {
-      console.error("Error al enviar el archivo:", error.response || error);
-      setErrorMessage("Error al enviar el archivo. Intenta de nuevo.");
-      setShowErrorModal(true);
+      console.error("Error al enviar el archivo:", error);
+      setModalType("warning");
+      setModalMessage("Error al enviar el archivo. Intenta de nuevo.");
+      setShowModal(true);
     }
-  };
-
-  const abrirConfirmacion = () => {
-    if (!datosFormulario.file || !datosFormulario.fileName) {
-      setErrorMessage("Por favor, completa todos los campos antes de enviar.");
-      setShowErrorModal(true);
-      return;
-    }
-    setShowConfirmationModal(true);
-  };
-
-  const confirmarEnvio = () => {
-    setShowConfirmationModal(false);
-    enviarArchivo();
-  };
-
-  const cerrarModalExito = () => {
-    setShowSuccessModal(false);
-    navigate("/alumno/formulario-dos-integrantes");
-  };
-
-  const anteriorPaso = () => {
-    navigate("/alumno/formulario-uno-datos");
   };
 
   return (
     <div className="body-background">
-      <div className="card">
+      <div className="card shadow-lg p-4">
         <h1>Subir archivo</h1>
         <form>
-          <div className="mb-3">
-            <label htmlFor="nombreArchivo" className="form-label">
-              Nombre del archivo (agregar al final .pdf)
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="nombreArchivo"
-              name="fileName"
-              value={datosFormulario.fileName}
-              onChange={manejarCambio}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="archivo" className="form-label">
-              Seleccionar archivo
-            </label>
-            <input
-              type="file"
-              className="form-control"
-              accept=".pdf"
-              id="archivo"
-              name="file"
-              onChange={manejarArchivo}
-            />
-          </div>
-          <div className="d-flex justify-content-between">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={anteriorPaso}
-            >
-              Anterior
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={abrirConfirmacion}
-            >
-              Enviar
-            </button>
-          </div>
+          <input
+            type="text"
+            className="form-control mb-3"
+            placeholder="Nombre del archivo (agregar al final .pdf)"
+            name="fileName"
+            value={datosFormulario.fileName}
+            onChange={manejarCambio}
+          />
+          <input
+            type="file"
+            className="form-control mb-3"
+            accept=".pdf"
+            name="file"
+            onChange={manejarArchivo}
+          />
+          <button type="button" className="btn btn-primary w-100 mt-3" onClick={enviarArchivo}>
+            Confirmar y Enviar
+          </button>
         </form>
       </div>
+
       <img src={logo} alt="Logo ESCOM" className="mt-4" style={{ width: "150px" }} />
 
-      {/* Modal */}
-      <Modal show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)}>
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirmar envío</Modal.Title>
+          <Modal.Title>{modalType === "success" ? "Éxito" : "Advertencia"}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>¿Estás seguro de enviar este archivo?</Modal.Body>
+        <Modal.Body>{modalMessage}</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowConfirmationModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={confirmarEnvio}>
-            Confirmar
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal show={showSuccessModal} onHide={cerrarModalExito}>
-        <Modal.Header closeButton>
-          <Modal.Title>Éxito</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Archivo enviado correctamente.</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={cerrarModalExito}>
-            Continuar
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Error</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{errorMessage}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowErrorModal(false)}>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cerrar
           </Button>
         </Modal.Footer>

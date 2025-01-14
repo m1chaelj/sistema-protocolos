@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import api from "../../api/api"; // Importa el cliente Axios
 import logo from "../../recursos/imagenes/logoESCOM.png";
+import { Modal, Button } from "react-bootstrap";
 
 function RegistroDirector() {
   const [datosFormulario, setDatosFormulario] = useState({
@@ -13,6 +14,9 @@ function RegistroDirector() {
     confirmarPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false); // Estado para el icono de carga
+  const [showModal, setShowModal] = useState(false); // Estado del modal
+  const [modalMessage, setModalMessage] = useState(""); // Mensaje del modal
+  const [modalType, setModalType] = useState("info"); // Tipo de mensaje: success, warning, error
   const [registroExitoso, setRegistroExitoso] = useState(false); // Controla si se completó el registro
 
   const manejarCambio = (e) => {
@@ -20,13 +24,91 @@ function RegistroDirector() {
     setDatosFormulario({ ...datosFormulario, [name]: value });
   };
 
+  const validarFormulario = () => {
+    const { nombre, apellidoPaterno, apellidoMaterno, boleta, correo, password, confirmarPassword } = datosFormulario;
+
+    // Campos vacíos
+    if (
+      !nombre.trim() ||
+      !apellidoPaterno.trim() ||
+      !apellidoMaterno.trim() ||
+      !boleta.trim() ||
+      !correo.trim() ||
+      !password.trim() ||
+      !confirmarPassword.trim()
+    ) {
+      setModalMessage("Por favor, completa todos los campos antes de continuar.");
+      setModalType("warning");
+      setShowModal(true);
+      return false;
+    }
+
+    // Validaciones específicas
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(nombre)) {
+      setModalMessage("El nombre debe contener solo letras y espacios.");
+      setModalType("warning");
+      setShowModal(true);
+      return false;
+    }
+
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(apellidoPaterno)) {
+      setModalMessage("El apellido paterno debe contener solo letras y espacios.");
+      setModalType("warning");
+      setShowModal(true);
+      return false;
+    }
+
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(apellidoMaterno)) {
+      setModalMessage("El apellido materno debe contener solo letras y espacios.");
+      setModalType("warning");
+      setShowModal(true);
+      return false;
+    }
+
+    if (!/^\d{10}$/.test(boleta)) {
+      setModalMessage("La boleta debe tener exactamente 10 dígitos numéricos.");
+      setModalType("warning");
+      setShowModal(true);
+      return false;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+      setModalMessage("Por favor, ingresa un correo electrónico válido.");
+      setModalType("warning");
+      setShowModal(true);
+      return false;
+    }
+
+    if (password.length < 8) {
+      setModalMessage("La contraseña debe tener al menos 8 caracteres.");
+      setModalType("warning");
+      setShowModal(true);
+      return false;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      setModalMessage("La contraseña debe contener al menos una letra mayúscula.");
+      setModalType("warning");
+      setShowModal(true);
+      return false;
+    }
+
+    if (password !== confirmarPassword) {
+      setModalMessage("Las contraseñas no coinciden.");
+      setModalType("warning");
+      setShowModal(true);
+      return false;
+    }
+
+    return true;
+  };
+
   const manejarRegistro = async () => {
-    if (datosFormulario.password !== datosFormulario.confirmarPassword) {
-      alert("Las contraseñas no coinciden.");
+    if (!validarFormulario()) {
       return;
     }
 
-    setIsLoading(true); // Activa el estado de carga
+    setIsLoading(true);
 
     try {
       const response = await api.post("/registrarse/secretario", {
@@ -39,15 +121,19 @@ function RegistroDirector() {
       });
 
       if (response.status === 200 || response.status === 201) {
-        setRegistroExitoso(true); // Indicar que el registro fue exitoso
+        setRegistroExitoso(true);
       } else {
-        alert("Hubo un problema al registrar. Intenta de nuevo.");
+        setModalMessage("Hubo un problema al registrar. Intenta de nuevo.");
+        setModalType("warning");
+        setShowModal(true);
       }
     } catch (error) {
       console.error("Error en el registro:", error.response?.data || error.message);
-      alert("Hubo un error al registrar. Intenta de nuevo.");
+      setModalMessage("Hubo un error al registrar. Intenta de nuevo.");
+      setModalType("danger");
+      setShowModal(true);
     } finally {
-      setIsLoading(false); // Desactiva el estado de carga
+      setIsLoading(false);
     }
   };
 
@@ -55,7 +141,7 @@ function RegistroDirector() {
     <div className="body-background d-flex flex-column justify-content-center align-items-center">
       {!registroExitoso ? (
         <div className="card p-4" style={{ maxWidth: "800px", width: "100%" }}>
-          <h1 className="text-center mb-4">Registro de Director</h1>
+          <h1 className="text-center mb-4">Registro de Secretario CATT</h1>
           <div className="row">
             <div className="col-md-6">
               <input
@@ -120,7 +206,7 @@ function RegistroDirector() {
                 type="button"
                 className="btn btn-primary w-100"
                 onClick={manejarRegistro}
-                disabled={isLoading} // Desactiva el botón mientras carga
+                disabled={isLoading}
               >
                 {isLoading ? (
                   <div className="spinner-border text-light" role="status">
@@ -142,6 +228,21 @@ function RegistroDirector() {
         </div>
       )}
       <img src={logo} alt="Logo ESCOM" className="mt-4" style={{ width: "150px" }} />
+
+      {/* Modal para mensajes */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {modalType === "success" ? "Éxito" : modalType === "warning" ? "Advertencia" : "Error"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
