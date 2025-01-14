@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 @Slf4j
 @ApplicationScoped
@@ -56,7 +57,6 @@ public class ArchivoBs implements ArchivoService {
             return Either.left(ErrorCodesEnum.ERROR);
         }
 
-        entity.setFilePath(Path.of(filePath.toString()));
         entity.setArchivo(fileContent);
 
         Archivo archivo = archivoRepository.save(entity);
@@ -64,6 +64,20 @@ public class ArchivoBs implements ArchivoService {
 
         return saveResult;
     }
+
+    @Override
+    public Either<ErrorCodesEnum, Archivo> updateFile(String fileName, Archivo entity) {
+        Either<ErrorCodesEnum, Archivo> result = Either.left(ErrorCodesEnum.BAD_REQUEST);
+        var existeArchivo = existe(fileName);
+        if (existeArchivo.isPresent()) {
+            var archivoActualiza = existeArchivo.get();
+            archivoActualiza.setArchivo(entity.getArchivo());
+
+            result = Either.right(archivoRepository.update(archivoActualiza));
+        }
+        return result;
+    }
+
 
     private boolean saveFile(InputStream inputStream, File file) {
         if (inputStream == null || file == null) {
@@ -98,10 +112,14 @@ public class ArchivoBs implements ArchivoService {
             log.error("Error reading file as bytes", e);
             return null;
         }
+
+
+    }
+
+    private Optional<Archivo> existe(String fileName) {
+       return archivoRepository.existe(fileName);
     }
 
 
-
-
-
 }
+

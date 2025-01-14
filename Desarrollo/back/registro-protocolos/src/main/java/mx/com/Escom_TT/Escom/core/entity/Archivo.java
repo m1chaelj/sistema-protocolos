@@ -20,12 +20,4 @@ public class Archivo {
     @Lob // Indica que este campo puede almacenar un archivo binario grande
     private byte[] archivo; // Contenido binario del archivo
 
-    private Path filePath; // Ruta del archivo en el sistema de archivos
-
-    private Long fileSize; // Tamaño del archivo (en bytes)
-
-    private String mimeType;
-
-
-
 }

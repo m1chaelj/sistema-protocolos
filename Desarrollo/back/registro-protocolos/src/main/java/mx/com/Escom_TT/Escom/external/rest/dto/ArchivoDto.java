@@ -24,7 +24,6 @@ private Integer id;
         return ArchivoDto.builder()
                 .id(archivo.getId())
                 .fileName(archivo.getFileName())
-                .filePath(String.valueOf(archivo.getFilePath()))
                 .build();
     }
 }

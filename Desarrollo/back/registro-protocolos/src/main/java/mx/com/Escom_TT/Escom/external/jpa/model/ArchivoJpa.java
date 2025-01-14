@@ -15,9 +15,10 @@ import java.nio.file.Path;
 @Table(name = "archivo")
 public class ArchivoJpa {
 
-    @Id
+
     @SequenceGenerator(name = "archivo_id_archivo_seq", sequenceName = "archivo_id_archivo_seq", allocationSize = 1)
     @GeneratedValue(generator = "archivo_id_archivo_seq", strategy = GenerationType.SEQUENCE)
+    @Id
     @Column(name = "id_archivo")
     private Integer id;
 

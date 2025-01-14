@@ -8,5 +8,4 @@ import mx.com.Escom_TT.util.error.ErrorCodesEnum;
 public interface AlumnoService {
     Either<ErrorCodesEnum, Alumno> create(Alumno entity);
     Either<ErrorCodesEnum, AlumnoSesion> InicioSesion(Alumno entity);
-
 }

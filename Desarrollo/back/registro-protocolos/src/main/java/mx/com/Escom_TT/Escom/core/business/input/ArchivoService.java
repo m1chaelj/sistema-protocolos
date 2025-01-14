@@ -8,5 +8,5 @@ import java.io.InputStream;
 
 public interface ArchivoService {
     Either<ErrorCodesEnum, Archivo> uploadFile(String fileName, InputStream inputStream,Archivo entity);
-
+    Either<ErrorCodesEnum, Archivo> updateFile(String fileName,  Archivo entity);
 }
