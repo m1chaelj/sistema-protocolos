@@ -3,6 +3,7 @@
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/Escom/core/entity/Protocolo.java
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/Escom/core/statemachine/package-info.java
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/util/error/ConstraintViolationExceptionMapper.java
+/home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/rest/dto/EvaluacionDto.java
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/jpa/model/EstadoProtocoloJpa.java
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/jpa/model/ProtocoloJpa.java
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/util/statemachine/StateMachineLoader.java
@@ -25,6 +26,7 @@
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/jpa/dao/ProtocoloDao.java
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/rest/controller/VistaSecretarioController.java
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/util/statemachine/Operation.java
+/home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/Escom/core/entity/EstadoFinalProtocolo.java
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/Escom/core/business/implementation/ProtocoloBs.java
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/Escom/external/rest/dto/SinodalPersistDto.java
 /home/mike/Documentos/sistema-protocolos/Desarrollo/back/vista-secretarios-protocolos/src/main/java/mx/com/Escom_TT/util/statemachine/CustomStateMachine.java

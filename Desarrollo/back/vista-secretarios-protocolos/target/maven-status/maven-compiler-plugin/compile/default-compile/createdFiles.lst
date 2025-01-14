@@ -1,4 +1,6 @@
+mx/com/Escom_TT/Escom/core/entity/EstadoFinalProtocolo.class
 mx/com/Escom_TT/Escom/core/entity/Protocolo.class
+mx/com/Escom_TT/Escom/external/rest/dto/EvaluacionDto.class
 mx/com/Escom_TT/util/statemachine/StateMachineLoader.class
 mx/com/Escom_TT/util/error/ErrorCodeException.class
 mx/com/Escom_TT/util/error/PersistenceExceptionMapper.class
@@ -15,8 +17,10 @@ mx/com/Escom_TT/Escom/external/jpa/repository/ProtocoloJpaRepository.class
 mx/com/Escom_TT/Escom/core/entity/Sinodal$SinodalBuilder.class
 mx/com/Escom_TT/util/error/ErrorDetailDto.class
 mx/com/Escom_TT/util/error/ErrorType.class
+mx/com/Escom_TT/Escom/core/entity/EstadoFinalProtocolo$EstadoFinalProtocoloBuilder.class
 mx/com/Escom_TT/Escom/external/rest/dto/SinodalPersistDto.class
 mx/com/Escom_TT/util/enums/Numbers.class
+mx/com/Escom_TT/Escom/external/rest/dto/EvaluacionDto$EvaluacionDtoBuilder.class
 mx/com/Escom_TT/Escom/external/jpa/model/EstadoProtocoloJpa$EstadoProtocoloJpaBuilder.class
 mx/com/Escom_TT/Escom/external/rest/dto/SinodalDto.class
 mx/com/Escom_TT/Escom/external/jpa/model/EstadoProtocoloJpa.class
