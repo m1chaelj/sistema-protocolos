@@ -1,7 +1,9 @@
 package mx.com.Escom_TT.Escom.external.rest.controller;
 
+import io.vavr.control.Either;
 import mx.com.Escom_TT.Escom.core.business.input.ProtocoloService;
 import mx.com.Escom_TT.Escom.external.rest.dto.*;
+import mx.com.Escom_TT.util.error.ErrorCodesEnum;
 import mx.com.Escom_TT.util.error.ErrorMapper;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
@@ -46,4 +48,5 @@ public class VistaSecretarioController {
         return Response.ok(evaluacion).build();
 
     }
+
 }
