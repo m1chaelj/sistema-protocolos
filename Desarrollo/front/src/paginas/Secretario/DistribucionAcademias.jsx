@@ -29,8 +29,6 @@ function DistribucionProtocolos() {
         const initializedProtocolos = response.data.map((protocolo) => ({
           ...protocolo,
           academias: ["", "", ""],
-          sinodales: ["", "", ""],
-          opcionesSinodales: [[], [], []],
         }));
         setProtocolos(initializedProtocolos);
         setTimeout(() => setIsVisible(true), 500);
@@ -42,46 +40,6 @@ function DistribucionProtocolos() {
       alert("Error al cargar los datos. Intenta de nuevo.");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const fetchSinodales = async (protocoloIndex, academiaIndex, academia) => {
-    if (!academia) {
-      setProtocolos((prevProtocolos) =>
-        prevProtocolos.map((protocolo, index) =>
-          index === protocoloIndex
-            ? {
-                ...protocolo,
-                opcionesSinodales: protocolo.opcionesSinodales.map((sinodales, i) =>
-                  i === academiaIndex ? [] : sinodales
-                ),
-              }
-            : protocolo
-        )
-      );
-      return;
-    }
-
-    try {
-      const response = await api.get(
-        `/secretario/vista-distribucion-protocolos/sinodales/${academia}`
-      );
-      const sinodales = response.data || [];
-      setProtocolos((prevProtocolos) =>
-        prevProtocolos.map((protocolo, index) =>
-          index === protocoloIndex
-            ? {
-                ...protocolo,
-                opcionesSinodales: protocolo.opcionesSinodales.map((opcion, i) =>
-                  i === academiaIndex ? sinodales : opcion
-                ),
-              }
-            : protocolo
-        )
-      );
-    } catch (error) {
-      console.error("Error al obtener los sinodales:", error);
-      alert("Error al cargar los sinodales. Intenta de nuevo.");
     }
   };
 
@@ -98,30 +56,18 @@ function DistribucionProtocolos() {
           : protocolo
       )
     );
-    fetchSinodales(protocoloIndex, academiaIndex, value);
   };
 
-  const handleSinodalChange = (protocoloIndex, sinodalIndex, value) => {
-    setProtocolos((prevProtocolos) => {
-      const protocolo = prevProtocolos[protocoloIndex];
-      const sinodalesSeleccionados = protocolo.sinodales;
-
-      if (sinodalesSeleccionados.includes(value)) {
-        alert("El sinodal ya está seleccionado en esta fila. Por favor, elige otro.");
-        return prevProtocolos;
-      }
-
-      return prevProtocolos.map((protocolo, index) =>
-        index === protocoloIndex
-          ? {
-              ...protocolo,
-              sinodales: protocolo.sinodales.map((sinodal, i) =>
-                i === sinodalIndex ? value : sinodal
-              ),
-            }
-          : protocolo
-      );
-    });
+  const enviarProtocolo = async (protocolo) => {
+    try {
+      await api.post(`/secretario/protocolos/${protocolo.id}/enviar`, {
+        academias: protocolo.academias,
+      });
+      alert(`Protocolo "${protocolo.tituloProtocolo}" enviado exitosamente.`);
+    } catch (error) {
+      console.error("Error al enviar el protocolo:", error);
+      alert("Hubo un error al enviar el protocolo. Intenta de nuevo.");
+    }
   };
 
   const visualizarPDF = (archivo) => {
@@ -192,9 +138,9 @@ function DistribucionProtocolos() {
                         <th>Directores</th>
                         <th>Título del Protocolo</th>
                         <th>Academias</th>
-                        <th>Sinodales</th>
                         <th>Acciones</th>
                         <th>N° Registro</th>
+                        <th>Enviar</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -225,25 +171,6 @@ function DistribucionProtocolos() {
                             ))}
                           </td>
                           <td>
-                            {protocolo.sinodales.map((sinodal, sinodalIndex) => (
-                              <select
-                                key={sinodalIndex}
-                                value={sinodal}
-                                onChange={(e) =>
-                                  handleSinodalChange(protocoloIndex, sinodalIndex, e.target.value)
-                                }
-                                className="form-select"
-                              >
-                                <option value="">Seleccione un sinodal</option>
-                                {protocolo.opcionesSinodales[sinodalIndex].map((opcion, i) => (
-                                  <option key={i} value={opcion.nombre}>
-                                    {opcion.nombre}
-                                  </option>
-                                ))}
-                              </select>
-                            ))}
-                          </td>
-                          <td>
                             <div className="d-flex justify-content-center gap-3">
                               <img
                                 src={ojoIcono}
@@ -260,6 +187,14 @@ function DistribucionProtocolos() {
                             </div>
                           </td>
                           <td>{protocolo.registro}</td>
+                          <td>
+                            <button
+                              className="btn btn-success"
+                              onClick={() => enviarProtocolo(protocolo)}
+                            >
+                              Enviar
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>

@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../api/api8084";
 import "../../recursos/estilos/custom.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import api from "../../api/api8082";
 import logo from "../../recursos/imagenes/logoESCOM.png";
+import ojoIcono from "../../recursos/imagenes/ojo.png";
+import descargarIcono from "../../recursos/imagenes/descargar-pdf.png";
 
 function ProtocolosAsignados() {
+  const [academia, setAcademia] = useState("");
   const [protocolos, setProtocolos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [cuestionarioVisible, setCuestionarioVisible] = useState(null); // Protocolo en evaluación
-  const [respuestas, setRespuestas] = useState({});
-  const [isVisible, setIsVisible] = useState(false);
-
+  const [selectedPDF, setSelectedPDF] = useState(null);
   const navigate = useNavigate();
 
   const cerrarSesion = () => {
@@ -20,65 +20,68 @@ function ProtocolosAsignados() {
     navigate("/inicio");
   };
 
-  const fetchProtocolos = async () => {
-    setIsLoading(true);
-    setIsVisible(false); // Ocultar la tabla antes de cargar nuevos datos
+  const buscarProtocolos = useCallback(async () => {
+    setIsLoading(true); // Muestra el estado de carga
+    setProtocolos([]); // Limpia la tabla antes de cargar nuevos datos
     try {
-      const response = await api.get("/sinodal/protocolos-asignados");
-      if (response.data && response.data.length > 0) {
-        setProtocolos(response.data);
-        setTimeout(() => setIsVisible(true), 500);
+      const response = await api.get(`/sinodal/protocolos/${academia}`);
+      if (response.data) {
+        const data = Array.isArray(response.data) ? response.data : [response.data];
+        setProtocolos(data);
       } else {
-        alert("No se encontraron protocolos asignados.");
+        setProtocolos([]); // Si no hay datos, vacía la tabla
       }
     } catch (error) {
-      console.error("Error al obtener los protocolos:", error);
-      alert("Error al cargar los datos. Intenta de nuevo.");
+      console.error("Error al buscar protocolos:", error);
+      alert("Hubo un error al buscar los protocolos. Intenta de nuevo.");
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Oculta el estado de carga
+    }
+  }, [academia]);
+
+  useEffect(() => {
+    if (academia) {
+      buscarProtocolos();
+    } else {
+      setProtocolos([]);
+    }
+  }, [academia, buscarProtocolos]);
+
+  const visualizarPDF = (archivo) => {
+    try {
+      const pdfData = `data:application/pdf;base64,${archivo}`;
+      setSelectedPDF(pdfData);
+    } catch (error) {
+      console.error("Error al visualizar el PDF:", error);
+      alert("No se pudo cargar el PDF. Verifica el archivo.");
     }
   };
 
-  const toggleCuestionario = (protocolo) => {
-    setCuestionarioVisible(
-      cuestionarioVisible === protocolo ? null : protocolo
-    );
-  };
-
-  const handleRespuesta = (index, value) => {
-    setRespuestas((prev) => ({
-      ...prev,
-      [index]: value,
-    }));
-  };
-
-  const guardarCuestionario = async (protocolo) => {
-    const evaluacionFinal = Object.values(respuestas).every(
-      (resp) => resp === "Si"
-    )
-      ? "APROBADO"
-      : "RECHAZADO";
-
-    const payload = {
-      protocoloId: protocolo.id,
-      respuestas,
-      evaluacionFinal,
-    };
-
+  const descargarPDF = (archivo) => {
     try {
-      await api.post("/sinodal/guardar-evaluacion", payload);
-      alert("Evaluación guardada correctamente.");
-      setCuestionarioVisible(null);
-      setRespuestas({});
+      const link = document.createElement("a");
+      link.href = `data:application/pdf;base64,${archivo}`;
+      link.download = "protocolo.pdf";
+      link.click();
     } catch (error) {
-      console.error("Error al guardar la evaluación:", error);
-      alert("Error al guardar la evaluación. Intenta de nuevo.");
+      console.error("Error al descargar el PDF:", error);
+      alert("No se pudo descargar el PDF. Intenta nuevamente.");
+    }
+  };
+
+  const regresarProtocolo = async (protocolo) => {
+    try {
+      await api.post(`/sinodal/protocolos/${protocolo.id}/regresar`); // Eliminamos `response` ya que no se utiliza
+      alert(`Protocolo "${protocolo.tituloProtocolo}" regresado exitosamente.`);
+      buscarProtocolos(); // Actualizar la lista de protocolos
+    } catch (error) {
+      console.error("Error al regresar el protocolo:", error);
+      alert("Hubo un error al regresar el protocolo. Intenta de nuevo.");
     }
   };
 
   return (
     <div className="body-background">
-      {/* Botón de cerrar sesión */}
       <div
         style={{
           position: "absolute",
@@ -103,14 +106,22 @@ function ProtocolosAsignados() {
         Cerrar sesión
       </div>
 
-      {/* Contenido principal */}
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
         <div className="card shadow-lg p-4" style={{ width: "90%", maxWidth: "1200px" }}>
           <div className="card-body">
-            <h1 className="text-center mb-4">Protocolos Asignados</h1>
-            <button className="btn btn-primary mb-4" onClick={fetchProtocolos}>
-              Mostrar Protocolos
-            </button>
+            <h1 className="text-center mb-4">Buscar Protocolos por Academia</h1>
+            <div className="input-group mb-4">
+              <select
+                className="form-select"
+                value={academia}
+                onChange={(e) => setAcademia(e.target.value)}
+              >
+                <option value="">Selecciona una academia</option>
+                <option value="IA">IA</option>
+                <option value="ACC">ACC</option>
+                <option value="ACS">ACS</option>
+              </select>
+            </div>
             {isLoading ? (
               <div className="text-center">
                 <div className="spinner-border text-primary" role="status">
@@ -118,98 +129,54 @@ function ProtocolosAsignados() {
                 </div>
               </div>
             ) : (
-              isVisible && (
-                <div className="table-responsive fade-in">
+              protocolos.length > 0 ? (
+                <div className="table-responsive">
                   <table className="table table-bordered table-hover text-center">
                     <thead className="table-primary">
                       <tr>
-                        <th>Estudiante Principal</th>
-                        <th>Director</th>
-                        <th>Título</th>
-                        <th>Evaluar</th>
-                        <th>Evaluación Final</th>
-                        <th>N° Registro del TT</th>
-                        <th>Acción</th>
+                        <th>Título del Protocolo</th>
+                        <th>Nombre del Estudiante</th>
+                        <th>Primer Director</th>
+                        <th>Segundo Director</th>
+                        <th>N° Registro</th>
+                        <th>Academia</th>
+                        <th>Verificación</th>
+                        <th>Acciones</th>
+                        <th>Regresar</th>
                       </tr>
                     </thead>
                     <tbody>
                       {protocolos.map((protocolo, index) => (
                         <tr key={index}>
-                          <td>{protocolo.nombreEstudiante}</td>
-                          <td>
-                            {protocolo.primerDirector}
-                            <br />
-                            {protocolo.segundoDirector}
-                          </td>
                           <td>{protocolo.tituloProtocolo}</td>
+                          <td>{protocolo.nombreEstudiante}</td>
+                          <td>{protocolo.primerDirector}</td>
+                          <td>{protocolo.segundoDirector}</td>
+                          <td>{protocolo.registro}</td>
+                          <td>{protocolo.academia}</td>
+                          <td>{protocolo.verificacion}</td>
+                          <td>
+                            <div className="d-flex justify-content-center gap-3">
+                              <img
+                                src={ojoIcono}
+                                alt="Visualizar PDF"
+                                style={{ cursor: "pointer", width: "45px" }}
+                                onClick={() => visualizarPDF(protocolo.archivo)}
+                              />
+                              <img
+                                src={descargarIcono}
+                                alt="Descargar PDF"
+                                style={{ cursor: "pointer", width: "45px" }}
+                                onClick={() => descargarPDF(protocolo.archivo)}
+                              />
+                            </div>
+                          </td>
                           <td>
                             <button
-                              className="btn btn-info"
-                              onClick={() => toggleCuestionario(protocolo)}
+                              className="btn btn-warning"
+                              onClick={() => regresarProtocolo(protocolo)}
                             >
-                              Evaluar
-                            </button>
-                          </td>
-                          <td>
-                            {cuestionarioVisible === protocolo && (
-                              <div className="mt-3">
-                                {[
-                                  "¿El título corresponde al producto esperado?",
-                                  "¿El resumen expresa claramente la propuesta de TT?",
-                                  "¿Las palabras clave han sido clasificadas adecuadamente?",
-                                  "¿La presentación del problema a resolver es comprensible?",
-                                  "¿El objetivo es preciso y relevante?",
-                                  "¿El planteamiento del problema y la tentativa de solución son claros?",
-                                  "¿Sus contribuciones o beneficios están completamente justificados?",
-                                  "¿Su viabilidad es adecuada?",
-                                  "¿La propuesta metodológica es pertinente?",
-                                  "¿El calendario de actividades es adecuado?",
-                                ].map((pregunta, i) => (
-                                  <div key={i} className="mb-2">
-                                    <p>{pregunta}</p>
-                                    <label>
-                                      <input
-                                        type="radio"
-                                        name={`pregunta-${i}`}
-                                        value="Si"
-                                        onChange={() => handleRespuesta(i, "Si")}
-                                      />{" "}
-                                      Si
-                                    </label>
-                                    <label className="ms-3">
-                                      <input
-                                        type="radio"
-                                        name={`pregunta-${i}`}
-                                        value="No"
-                                        onChange={() => handleRespuesta(i, "No")}
-                                      />{" "}
-                                      No
-                                    </label>
-                                  </div>
-                                ))}
-                                <button
-                                  className="btn btn-success mt-3"
-                                  onClick={() => guardarCuestionario(protocolo)}
-                                >
-                                  Guardar
-                                </button>
-                              </div>
-                            )}
-                          </td>
-                          <td>
-                            <span
-                              className={`badge bg-${
-                                protocolo.evaluacionFinal === "APROBADO"
-                                  ? "success"
-                                  : "danger"
-                              }`}
-                            >
-                              {protocolo.evaluacionFinal || "Pendiente"}
-                            </span>
-                          </td>
-                          <td>
-                            <button className="btn btn-secondary">
-                              Regresar evaluación
+                              Regresar
                             </button>
                           </td>
                         </tr>
@@ -217,13 +184,71 @@ function ProtocolosAsignados() {
                     </tbody>
                   </table>
                 </div>
+              ) : (
+                <div className="text-center">
+                  <p className="text-muted">No se encontraron protocolos para esta academia.</p>
+                </div>
               )
             )}
           </div>
         </div>
       </div>
 
-      {/* Logo */}
+      {selectedPDF && (
+        <div
+          className="fixed-top d-flex justify-content-center align-items-center"
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            height: "100vh",
+            width: "100%",
+            zIndex: 1050,
+            overflow: "auto",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              maxWidth: "1400px",
+              maxHeight: "100vh",
+              backgroundColor: "#fff",
+              padding: "16px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <h1 className="text-center mb-4">Vista previa del protocolo</h1>
+            <iframe
+              src={selectedPDF}
+              style={{
+                flex: 1,
+                width: "100%",
+                height: "100%",
+                border: "none",
+                borderRadius: "8px",
+                overflow: "auto",
+              }}
+              title="Vista previa del PDF"
+            ></iframe>
+            <button
+              className="btn btn-danger"
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                zIndex: 1060,
+              }}
+              onClick={() => setSelectedPDF(null)}
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="text-center mt-4">
         <img
           src={logo}

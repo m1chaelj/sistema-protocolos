@@ -33,8 +33,9 @@ function EstadoProtocolo() {
     try {
       const response = await api.get(`/registro-protocolo/${nombre}`);
       if (response.data && response.data.length > 0) {
+        console.log("Datos del protocolo:", response.data[0]); // Verifica los datos recibidos
         setProtocolo(response.data[0]);
-        setTimeout(() => setShowFields(true), 500); // Delay for transition
+        setTimeout(() => setShowFields(true), 500); // Delay para la transición
       } else {
         setErrorMessage("No se encontró el protocolo. Verifica el nombre.");
         setShowErrorModal(true);
@@ -52,6 +53,33 @@ function EstadoProtocolo() {
   const capitalizeFirstLetter = (text) => {
     if (!text) return "";
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  };
+
+  const getEstadoStyle = (estado) => {
+    if (!estado) return { backgroundColor: "#6c757d", color: "#fff" }; // Gris si no hay estado
+    const trimmedEstado = estado.trim().toLowerCase(); // Elimina espacios y convierte a minúsculas
+    switch (trimmedEstado) {
+      case "aprobado":
+        return {
+          backgroundColor: "#28a745", // Verde
+          color: "#fff",
+        };
+      case "rechazado":
+        return {
+          backgroundColor: "#dc3545", // Rojo
+          color: "#fff",
+        };
+      case "en revisión":
+        return {
+          backgroundColor: "#ffc107", // Amarillo
+          color: "#000",
+        };
+      default:
+        return {
+          backgroundColor: "#6c757d", // Gris (predeterminado)
+          color: "#fff",
+        };
+    }
   };
 
   const fadeInStyle = (delay) => ({
@@ -167,13 +195,7 @@ function EstadoProtocolo() {
                     borderRadius: "15px",
                     fontSize: "1rem",
                     fontWeight: "bold",
-                    backgroundColor:
-                      protocolo.estadoProtocolo === "Aprobado"
-                        ? "#28a745"
-                        : protocolo.estadoProtocolo === "Rechazado"
-                        ? "#dc3545"
-                        : "#ffc107",
-                    color: protocolo.estadoProtocolo === "En revisión" ? "#000" : "#fff",
+                    ...getEstadoStyle(protocolo.estadoProtocolo),
                   }}
                 >
                   {capitalizeFirstLetter(protocolo.estadoProtocolo)}

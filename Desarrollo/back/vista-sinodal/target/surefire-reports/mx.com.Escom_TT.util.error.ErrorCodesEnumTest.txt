@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: mx.com.Escom_TT.util.error.ErrorCodesEnumTest
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.091 s - in mx.com.Escom_TT.util.error.ErrorCodesEnumTest
