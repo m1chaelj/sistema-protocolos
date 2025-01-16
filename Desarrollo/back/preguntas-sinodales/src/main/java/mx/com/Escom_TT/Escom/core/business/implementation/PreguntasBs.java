@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import java.sql.Timestamp;
 
 @ApplicationScoped
-public class PreguntasBs implements PreguntasService{
+public class PreguntasBs implements PreguntasService {
 
     @Inject
     PreguntasRepository preguntasRepository;
@@ -22,26 +22,16 @@ public class PreguntasBs implements PreguntasService{
     public Either<ErrorCodesEnum, Preguntas> crearPreguntas(Preguntas entity) {
         Either<ErrorCodesEnum, Preguntas> result;
 
-        if (entity.getJsonRespuestas() == null) {
-            result = Either.left(ErrorCodesEnum.NOT_FOUND);
-        } else {
-            try {
-                // Asignamos el valor tal cual (si ya es un string JSON válido)
-                String jsonRespuestas = entity.getJsonRespuestas();
+        try {
+            Timestamp fechaActual = Timestamp.valueOf(LocalDateTime.now());
+            entity.setFechaRespuesta(fechaActual);
 
-                // Establecer la fecha actual
-                Timestamp fechaActual = Timestamp.valueOf(LocalDateTime.now());
-                entity.setFechaRespuesta(fechaActual);
-
-                // Guardar en el repositorio, que maneja la conversión de String a jsonb
-                Preguntas preguntaCreada = preguntasRepository.save(entity);
-                result = Either.right(preguntaCreada);
-            } catch (Exception e) {
-                result = Either.left(ErrorCodesEnum.BAD_REQUEST); // Manejo de excepciones en caso de error
-            }
+            Preguntas preguntaCreada = preguntasRepository.save(entity);
+            result = Either.right(preguntaCreada);
+        } catch (Exception e) {
+            result = Either.left(ErrorCodesEnum.BAD_REQUEST);
         }
 
         return result;
     }
-
 }

@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api8084";
+import api2 from "../../api/api8085";
 import "../../recursos/estilos/custom.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../../recursos/imagenes/logoESCOM.png";
-import ojoIcono from "../../recursos/imagenes/ojo.png";
 import descargarIcono from "../../recursos/imagenes/descargar-pdf.png";
 
 function ProtocolosAsignados() {
   const [academia, setAcademia] = useState("");
   const [protocolos, setProtocolos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedPDF, setSelectedPDF] = useState(null);
+  const [selectedProtocolo, setSelectedProtocolo] = useState(null);
+  const [evaluacion, setEvaluacion] = useState([]);
+  const [nombreSinodal, setNombreSinodal] = useState("");
+  const [academiaSinodal, setAcademiaSinodal] = useState("");
   const navigate = useNavigate();
 
   const cerrarSesion = () => {
@@ -21,39 +24,86 @@ function ProtocolosAsignados() {
   };
 
   const buscarProtocolos = useCallback(async () => {
-    setIsLoading(true); // Muestra el estado de carga
-    setProtocolos([]); // Limpia la tabla antes de cargar nuevos datos
+    setIsLoading(true);
+    setProtocolos([]);
     try {
       const response = await api.get(`/sinodal/protocolos/${academia}`);
       if (response.data) {
         const data = Array.isArray(response.data) ? response.data : [response.data];
         setProtocolos(data);
       } else {
-        setProtocolos([]); // Si no hay datos, vacía la tabla
+        setProtocolos([]);
       }
     } catch (error) {
       console.error("Error al buscar protocolos:", error);
       alert("Hubo un error al buscar los protocolos. Intenta de nuevo.");
     } finally {
-      setIsLoading(false); // Oculta el estado de carga
+      setIsLoading(false);
     }
   }, [academia]);
 
-  useEffect(() => {
-    if (academia) {
-      buscarProtocolos();
-    } else {
-      setProtocolos([]);
-    }
-  }, [academia, buscarProtocolos]);
+  const evaluarProtocolo = (protocolo) => {
+    const preguntas = [
+      { pregunta: "¿El título corresponde al producto esperado?", respuesta: "" },
+      { pregunta: "¿El resumen expresa claramente la propuesta del TT, su importancia y aplicación?", respuesta: "" },
+      { pregunta: "¿Las palabras clave han sido clasificadas adecuadamente?", respuesta: "" },
+      { pregunta: "¿La presentación del problema a resolver es comprensible?", respuesta: "" },
+      { pregunta: "¿El objetivo es preciso y relevante?", respuesta: "" },
+      { pregunta: "¿El planteamiento del problema y la tentativa solución descrita son claros?", respuesta: "" },
+      { pregunta: "¿Sus contribuciones o beneficios están completamente justificados?", respuesta: "" },
+      { pregunta: "¿Su viabilidad es adecuada?", respuesta: "" },
+      { pregunta: "¿La propuesta metodológica es pertinente?", respuesta: "" },
+      { pregunta: "¿El calendario de actividades por estudiante es adecuado?", respuesta: "" },
+    ];
+    setSelectedProtocolo(protocolo);
+    setEvaluacion(preguntas);
+  };
 
-  const visualizarPDF = (archivo) => {
+  const enviarEvaluacion = async () => {
+    if (!selectedProtocolo) {
+      alert("No hay protocolo seleccionado para evaluar.");
+      return;
+    }
+
+    if (!nombreSinodal || !academiaSinodal) {
+      alert("Por favor, confirma tu nombre y academia antes de enviar la evaluación.");
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
-      const pdfData = `data:application/pdf;base64,${archivo}`;
-      setSelectedPDF(pdfData);
+      const respuestasString = `
+        Nombre del Sinodal: ${nombreSinodal}
+        Academia del Sinodal: ${academiaSinodal}
+        Protocolo Evaluado: ${selectedProtocolo.tituloProtocolo}
+        Respuestas:
+        ${evaluacion
+          .map((pregunta) => `${pregunta.pregunta}: ${pregunta.respuesta || "No respondida"}`)
+          .join("\n")}
+      `;
+
+      const response = await api2.post("/calificar", respuestasString, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200 || response.status === 201) {
+        alert("Evaluación enviada exitosamente.");
+        setSelectedProtocolo(null);
+        setEvaluacion([]);
+        setNombreSinodal("");
+        setAcademiaSinodal("");
+        buscarProtocolos();
+      } else {
+        alert("Hubo un problema al enviar la evaluación. Intenta de nuevo.");
+      }
     } catch (error) {
-      console.error("Error al visualizar el PDF:", error);
-      alert("No se pudo cargar el PDF. Verifica el archivo.");
+      console.error("Error al enviar evaluación:", error.response?.data || error.message);
+      alert("Hubo un error al enviar la evaluación. Intenta de nuevo.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -69,16 +119,19 @@ function ProtocolosAsignados() {
     }
   };
 
-  const regresarProtocolo = async (protocolo) => {
-    try {
-      await api.post(`/sinodal/protocolos/${protocolo.id}/regresar`); // Eliminamos `response` ya que no se utiliza
-      alert(`Protocolo "${protocolo.tituloProtocolo}" regresado exitosamente.`);
-      buscarProtocolos(); // Actualizar la lista de protocolos
-    } catch (error) {
-      console.error("Error al regresar el protocolo:", error);
-      alert("Hubo un error al regresar el protocolo. Intenta de nuevo.");
-    }
+  const handleRespuestaChange = (index, respuesta) => {
+    const updatedEvaluacion = [...evaluacion];
+    updatedEvaluacion[index].respuesta = respuesta;
+    setEvaluacion(updatedEvaluacion);
   };
+
+  useEffect(() => {
+    if (academia) {
+      buscarProtocolos();
+    } else {
+      setProtocolos([]);
+    }
+  }, [academia, buscarProtocolos]);
 
   return (
     <div className="body-background">
@@ -94,20 +147,12 @@ function ProtocolosAsignados() {
           transition: "color 0.3s, text-shadow 0.3s",
         }}
         onClick={cerrarSesion}
-        onMouseEnter={(e) => {
-          e.target.style.color = "#007BFF";
-          e.target.style.textShadow = "0 0 10px #FFD700";
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.color = "#FFFFFF";
-          e.target.style.textShadow = "none";
-        }}
       >
         Cerrar sesión
       </div>
 
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
-        <div className="card shadow-lg p-4" style={{ width: "90%", maxWidth: "1200px" }}>
+        <div className="card shadow-lg p-4" style={{ width: "95%", maxWidth: "1400px" }}>
           <div className="card-body">
             <h1 className="text-center mb-4">Buscar Protocolos por Academia</h1>
             <div className="input-group mb-4">
@@ -115,6 +160,7 @@ function ProtocolosAsignados() {
                 className="form-select"
                 value={academia}
                 onChange={(e) => setAcademia(e.target.value)}
+                style={{ fontSize: "18px", padding: "10px" }}
               >
                 <option value="">Selecciona una academia</option>
                 <option value="IA">IA</option>
@@ -134,15 +180,14 @@ function ProtocolosAsignados() {
                   <table className="table table-bordered table-hover text-center">
                     <thead className="table-primary">
                       <tr>
-                        <th>Título del Protocolo</th>
-                        <th>Nombre del Estudiante</th>
-                        <th>Primer Director</th>
-                        <th>Segundo Director</th>
-                        <th>N° Registro</th>
-                        <th>Academia</th>
-                        <th>Verificación</th>
-                        <th>Acciones</th>
-                        <th>Regresar</th>
+                        <th style={{ width: "15%" }}>Título del Protocolo</th>
+                        <th style={{ width: "15%" }}>Nombre del Estudiante</th>
+                        <th style={{ width: "15%" }}>Primer Director</th>
+                        <th style={{ width: "15%" }}>Segundo Director</th>
+                        <th style={{ width: "10%" }}>N° Registro</th>
+                        <th style={{ width: "10%" }}>Academia</th>
+                        <th style={{ width: "15%" }}>Descargar PDF</th>
+                        <th style={{ width: "15%" }}>Evaluar</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -154,29 +199,21 @@ function ProtocolosAsignados() {
                           <td>{protocolo.segundoDirector}</td>
                           <td>{protocolo.registro}</td>
                           <td>{protocolo.academia}</td>
-                          <td>{protocolo.verificacion}</td>
                           <td>
-                            <div className="d-flex justify-content-center gap-3">
-                              <img
-                                src={ojoIcono}
-                                alt="Visualizar PDF"
-                                style={{ cursor: "pointer", width: "45px" }}
-                                onClick={() => visualizarPDF(protocolo.archivo)}
-                              />
-                              <img
-                                src={descargarIcono}
-                                alt="Descargar PDF"
-                                style={{ cursor: "pointer", width: "45px" }}
-                                onClick={() => descargarPDF(protocolo.archivo)}
-                              />
-                            </div>
+                            <img
+                              src={descargarIcono}
+                              alt="Descargar PDF"
+                              style={{ cursor: "pointer", width: "40px" }}
+                              onClick={() => descargarPDF(protocolo.archivo)}
+                            />
                           </td>
                           <td>
                             <button
-                              className="btn btn-warning"
-                              onClick={() => regresarProtocolo(protocolo)}
+                              className="btn btn-primary"
+                              style={{ fontSize: "16px", padding: "10px 20px" }}
+                              onClick={() => evaluarProtocolo(protocolo)}
                             >
-                              Regresar
+                              Evaluar
                             </button>
                           </td>
                         </tr>
@@ -194,7 +231,7 @@ function ProtocolosAsignados() {
         </div>
       </div>
 
-      {selectedPDF && (
+      {selectedProtocolo && (
         <div
           className="fixed-top d-flex justify-content-center align-items-center"
           style={{
@@ -207,43 +244,90 @@ function ProtocolosAsignados() {
         >
           <div
             style={{
-              width: "100%",
-              height: "100%",
-              maxWidth: "1400px",
-              maxHeight: "100vh",
+              width: "80%",
+              maxWidth: "800px",
               backgroundColor: "#fff",
-              padding: "16px",
-              borderRadius: "8px",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-              position: "relative",
-              display: "flex",
-              flexDirection: "column",
+              padding: "20px",
+              borderRadius: "12px",
+              maxHeight: "90vh",
+              overflow: "auto",
             }}
           >
-            <h1 className="text-center mb-4">Vista previa del protocolo</h1>
-            <iframe
-              src={selectedPDF}
-              style={{
-                flex: 1,
-                width: "100%",
-                height: "100%",
-                border: "none",
-                borderRadius: "8px",
-                overflow: "auto",
-              }}
-              title="Vista previa del PDF"
-            ></iframe>
+            <h2 className="text-center mb-4">Evaluar Protocolo</h2>
+            <div className="mb-4">
+              <label htmlFor="nombreSinodal" className="form-label" style={{ fontSize: "18px" }}>
+                Confirma su nombre:
+              </label>
+              <input
+                type="text"
+                id="nombreSinodal"
+                className="form-control"
+                placeholder="Ingresa tu nombre"
+                value={nombreSinodal}
+                onChange={(e) => setNombreSinodal(e.target.value)}
+                style={{ fontSize: "18px", padding: "10px" }}
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="academiaSinodal" className="form-label" style={{ fontSize: "18px" }}>
+                Confirme su academia:
+              </label>
+              <select
+                id="academiaSinodal"
+                className="form-select"
+                value={academiaSinodal}
+                onChange={(e) => setAcademiaSinodal(e.target.value)}
+                style={{ fontSize: "18px", padding: "10px" }}
+              >
+                <option value="">Selecciona una academia</option>
+                <option value="IA">IA</option>
+                <option value="ACC">ACC</option>
+                <option value="ACS">ACS</option>
+              </select>
+            </div>
+            {evaluacion.map((pregunta, index) => (
+              <div key={index} className="mb-4" style={{ fontSize: "18px" }}>
+                <p>{pregunta.pregunta}</p>
+                <div>
+                  <label style={{ marginRight: "20px" }}>
+                    <input
+                      type="radio"
+                      name={`respuesta-${index}`}
+                      value="Sí"
+                      checked={pregunta.respuesta === "Sí"}
+                      onChange={() => handleRespuestaChange(index, "Sí")}
+                    />{" "}
+                    Sí
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name={`respuesta-${index}`}
+                      value="No"
+                      checked={pregunta.respuesta === "No"}
+                      onChange={() => handleRespuestaChange(index, "No")}
+                    />{" "}
+                    No
+                  </label>
+                </div>
+              </div>
+            ))}
             <button
-              className="btn btn-danger"
-              style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                zIndex: 1060,
-              }}
-              onClick={() => setSelectedPDF(null)}
+              className="btn btn-success w-100 mt-4"
+              style={{ fontSize: "18px", padding: "10px" }}
+              onClick={enviarEvaluacion}
             >
-              Cerrar
+              Enviar Evaluación
+            </button>
+            <button
+              className="btn btn-danger w-100 mt-2"
+              style={{ fontSize: "18px", padding: "10px" }}
+              onClick={() => {
+                setSelectedProtocolo(null);
+                setEvaluacion([]);
+              }}
+            >
+              Cancelar
             </button>
           </div>
         </div>
