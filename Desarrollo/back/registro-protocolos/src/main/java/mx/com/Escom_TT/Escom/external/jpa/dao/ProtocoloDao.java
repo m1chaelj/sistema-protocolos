@@ -29,9 +29,41 @@ public class ProtocoloDao implements ProtocoloRepository {
     @Inject
     @PersistenceUnit(name = "reading")
     EntityManager em;
-    private static final String QUERY_BUSCAR_PROTOCOLOS_POR_NOMBRE = "SELECT p.nombre_primer_director, p.nombre_segundo_director, p.fecha_subida, " +
-            "p.nombre AS nombre_protocolo, i.nombre AS nombre_primer_integrante, i.nombre_segundo_integrante AS nombre_segundo_integrante, p.registro, ep.nombre AS Estado " +
-            "FROM protocolo p JOIN estado_protocolo ep ON p.fk_id_estado = ep.id_estado JOIN integrantes i ON p.id_protocolo = i.fk_id_protocolo WHERE p.nombre = :nombre";
+    private static final String QUERY_BUSCAR_PROTOCOLOS_POR_NOMBRE =
+            "SELECT " +
+                    "    p.nombre_primer_director, " +
+                    "    p.nombre_segundo_director, " +
+                    "    p.fecha_subida, " +
+                    "    p.nombre AS nombre_protocolo, " +
+                    "    i.nombre AS nombre_primer_integrante, " +
+                    "    i.nombre_segundo_integrante AS nombre_segundo_integrante, " +
+                    "    p.registro, " +
+                    "    ep.nombre AS estado, " +
+                    "    STRING_AGG(r.json_respuestas, ', ') AS respuestas " +
+                    "FROM " +
+                    "    protocolo p " +
+                    "JOIN " +
+                    "    estado_protocolo ep " +
+                    "    ON p.fk_id_estado = ep.id_estado " +
+                    "JOIN " +
+                    "    integrantes i " +
+                    "    ON p.id_protocolo = i.fk_id_protocolo " +
+                    "LEFT JOIN " +
+                    "    respuesta r " +
+                    "    ON p.id_protocolo = r.fk_id_protocolo " +
+                    "WHERE " +
+                    "    p.nombre = :nombre " +
+                    "GROUP BY " +
+                    "    p.id_protocolo, " +
+                    "    p.nombre_primer_director, " +
+                    "    p.nombre_segundo_director, " +
+                    "    p.fecha_subida, " +
+                    "    p.nombre, " +
+                    "    i.nombre, " +
+                    "    i.nombre_segundo_integrante, " +
+                    "    p.registro, " +
+                    "    ep.nombre";
+
 
     private static final String PARAM_NOMBRE_PROTOCOLO = "nombre";
 
@@ -48,6 +80,7 @@ public class ProtocoloDao implements ProtocoloRepository {
                 .nombreSegundoIntegrante((String) protocolo[5])
                 .registro((String) protocolo[6])
                 .estadoProtocolo((String) protocolo[7])
+                .respuestas((String) protocolo[8])
                 .build()).collect(Collectors.toList());
     }
 

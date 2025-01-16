@@ -19,6 +19,7 @@ public class Protocolo {
     private String nombrePrimerIntegrante;
     private String nombreSegundoIntegrante;
     private String estadoProtocolo;
+    private String respuestas;
 
 
     @Override

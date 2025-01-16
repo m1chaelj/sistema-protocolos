@@ -29,6 +29,8 @@ public class VistaProtocoloDto {
     private String nombreSegundoIntegrante;
     @JsonProperty
     private String estadoProtocolo;
+    @JsonProperty
+    private String respuestas;
 
 
 
@@ -42,6 +44,7 @@ public class VistaProtocoloDto {
                 .nombreSegundoIntegrante(protocolo.getNombreSegundoIntegrante())
                 .estadoProtocolo(protocolo.getEstadoProtocolo())
                 .registro(protocolo.getRegistro())
+                .respuestas(protocolo.getRespuestas())
                 .build();
 
     }
