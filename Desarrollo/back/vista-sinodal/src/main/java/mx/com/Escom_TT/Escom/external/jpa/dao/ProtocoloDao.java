@@ -42,7 +42,7 @@ public class ProtocoloDao implements ProtocoloRepository {
     private static String PARAM_ACADEMIA="academia";
 
     @Override
-    public Optional<Protocolo> BuscarAcademia(String academia) {
+    public List<Protocolo> BuscarAcademia(String academia) {
         Stream<Object[]>busqueda= em.createNativeQuery(QUERY_FIND_ACADEMIA_PROTOCOLOS).setParameter(PARAM_ACADEMIA,academia).getResultStream();
         return busqueda.map(sinodal->Protocolo.builder()
                 .registro((String) sinodal[0])
@@ -53,6 +53,6 @@ public class ProtocoloDao implements ProtocoloRepository {
                 .academia((String)sinodal[5])
                 .verificacion((String) sinodal[6])
                 .archivo((byte[]) sinodal[7]).build()
-        ).findFirst();
+        ).collect(Collectors.toList());
     }
 }

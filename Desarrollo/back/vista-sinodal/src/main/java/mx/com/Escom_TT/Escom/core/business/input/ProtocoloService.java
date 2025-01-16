@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProtocoloService {
-    Optional<Protocolo> BuscarAcademia(String academia);
+    List<Protocolo> BuscarAcademia(String academia);
 }

@@ -17,11 +17,7 @@ public class ProtocoloBs implements ProtocoloService {
     ProtocoloRepository protocoloRepository;
 
     @Override
-    public Optional<Protocolo> BuscarAcademia(String academia) {
-        if (!List.of("ACC", "IA", "ACS").contains(academia)) {
-            return Optional.empty();
-        }
-
+    public List<Protocolo> BuscarAcademia(String academia) {
         return protocoloRepository.BuscarAcademia(academia);
     }
 }

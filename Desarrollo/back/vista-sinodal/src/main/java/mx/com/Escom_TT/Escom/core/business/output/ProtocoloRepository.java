@@ -8,6 +8,6 @@ import java.util.Optional;
 public interface ProtocoloRepository {
 
 
-    Optional<Protocolo> BuscarAcademia(String academia);
+   List<Protocolo> BuscarAcademia(String academia);
 
 }
