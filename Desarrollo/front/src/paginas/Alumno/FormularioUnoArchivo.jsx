@@ -54,7 +54,7 @@ function FormularioUnoArchivo() {
         setModalType("success");
         setModalMessage("Archivo enviado correctamente.");
         setShowModal(true);
-        setTimeout(() => navigate("/alumno/estado-protocolo"), 2000);
+        setTimeout(() => navigate("/alumno/formulario-dos-integrantes"), 2000);
       } else {
         throw new Error("Error al enviar el archivo.");
       }
