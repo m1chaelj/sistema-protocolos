@@ -15,6 +15,8 @@ function ProtocolosAsignados() {
   const [evaluacion, setEvaluacion] = useState([]);
   const [nombreSinodal, setNombreSinodal] = useState("");
   const [academiaSinodal, setAcademiaSinodal] = useState("");
+  const [evaluacionFinal, setEvaluacionFinal] = useState("");
+
   const navigate = useNavigate();
 
   const cerrarSesion = () => {
@@ -70,6 +72,11 @@ function ProtocolosAsignados() {
       return;
     }
 
+    if (!evaluacionFinal) {
+      alert("Por favor, selecciona la evaluación final.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -81,6 +88,7 @@ function ProtocolosAsignados() {
         ${evaluacion
           .map((pregunta) => `${pregunta.pregunta}: ${pregunta.respuesta || "No respondida"}`)
           .join("\n")}
+        Evaluación Final: ${evaluacionFinal}
       `;
 
       const response = await api2.post("/calificar", respuestasString, {
@@ -95,6 +103,7 @@ function ProtocolosAsignados() {
         setEvaluacion([]);
         setNombreSinodal("");
         setAcademiaSinodal("");
+        setEvaluacionFinal(""); // Limpia la evaluación final después del envío
         buscarProtocolos();
       } else {
         alert("Hubo un problema al enviar la evaluación. Intenta de nuevo.");
@@ -104,8 +113,9 @@ function ProtocolosAsignados() {
       alert("Hubo un error al enviar la evaluación. Intenta de nuevo.");
     } finally {
       setIsLoading(false);
-    }
+    } 
   };
+
 
   const descargarPDF = (archivo) => {
     try {
@@ -312,6 +322,35 @@ function ProtocolosAsignados() {
                 </div>
               </div>
             ))}
+            <div className="mb-4">
+            <label className="form-label" style={{ fontSize: "18px" }}>
+              Evaluación Final:
+            </label>
+            <div className="d-flex justify-content-around">
+              <button
+                className="btn"
+                style={{
+                  backgroundColor: evaluacionFinal === "Aprobado" ? "#28a745" : "#6c757d",
+                  color: "#fff",
+                  fontSize: "16px",
+                }}
+                onClick={() => setEvaluacionFinal("Aprobado")}
+              >
+                Aprobado
+              </button>
+              <button
+                className="btn"
+                style={{
+                  backgroundColor: evaluacionFinal === "Rechazado" ? "#dc3545" : "#6c757d",
+                  color: "#fff",
+                  fontSize: "16px",
+                }}
+                onClick={() => setEvaluacionFinal("Rechazado")}
+              >
+                Rechazado
+              </button>
+            </div>
+          </div>
             <button
               className="btn btn-success w-100 mt-4"
               style={{ fontSize: "18px", padding: "10px" }}
