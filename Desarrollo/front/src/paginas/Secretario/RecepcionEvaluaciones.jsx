@@ -180,6 +180,16 @@ function RecepcionEvaluaciones() {
       </div>
 
       <div className="text-center mt-4">
+        <button
+          className="btn btn-primary mb-4"
+          onClick={() => navigate("/secretario/distribucion-academias")}
+        >
+          Ir a Distribución de Academias
+        </button>
+      </div>
+
+
+      <div className="text-center mt-4">
         <img
           src={logo}
           alt="Logo ESCOM"

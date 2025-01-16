@@ -47,6 +47,10 @@ function FormularioUnoDatos() {
     }
   };
 
+  const irPaginaInicio = () => {
+    navigate("/alumno/pagina-inicio");
+  };
+
   return (
     <div className="body-background">
       <div className="card shadow-lg p-4">
@@ -80,6 +84,13 @@ function FormularioUnoDatos() {
             Confirmar y Continuar
           </button>
         </form>
+      </div>
+
+      <div className="mt-4 text-center">
+        <p style={{ color: "white", fontWeight: "bold", fontSize: "1.2rem" }}>En caso de que ya hayas llenado este formulario, da clic en el siguiente botón:</p>
+        <button type="button" className="btn btn-primary w-100 mt-3" onClick={irPaginaInicio}>
+          Ir a Página de Inicio
+        </button>
       </div>
 
       <img src={logo} alt="Logo ESCOM" className="mt-4" style={{ width: "150px" }} />

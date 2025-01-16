@@ -206,6 +206,15 @@ function DistribucionProtocolos() {
         </div>
       </div>
 
+      <div className="text-center mt-4">
+        <button
+          className="btn btn-primary mb-4"
+          onClick={() => navigate("/secretario/recepcion-evaluaciones")}
+        >
+          Ir a Recepción de Evaluaciones
+        </button>
+      </div>
+
       {selectedPDF && (
         <div
           className="fixed-top d-flex justify-content-center align-items-center"
@@ -259,6 +268,7 @@ function DistribucionProtocolos() {
             </button>
           </div>
         </div>
+        
       )}
 
       <div className="text-center mt-4">
